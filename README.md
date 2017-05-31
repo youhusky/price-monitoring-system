@@ -35,8 +35,9 @@ https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias=aps&field-keywords=-1
 
 Where n >= 2
 ```
-- Get all “search-alias” as category name
-- Repeat till empty element returned.
+- Get category name from child node text
+- Get “search-alias=xxx” as category search alias
+- Repeat till empty element is reached.
 - The product list url for each category is in the following format:
 ```
 https://www.amazon.com/s/ref=nb_sb_noss?url=$SEARCH_ALIAS&field-keywords=-12345&page=$PAGE_NO
