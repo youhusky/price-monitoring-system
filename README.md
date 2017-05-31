@@ -9,9 +9,6 @@ Design a price monitoring system to monitor product price and notify subscribers
 - User can query price reduction information through APIs as well. (Optional)
 - Daily notification runs every day to read from DB and notify subscribers. (Optional)
 
-## Analysis
-- Amazon has 480 millions products.
-- Cache size: key: detail_url (100 bytes), 
 ## Development environment
 - **MySQL DB** is used to store categories, product list urls and users information.
 - **Lombok** is used to eliminate constructors and getter/setter implementation for cleaner coding style.
