@@ -23,7 +23,7 @@ Where n >= 2
 - Repeat till empty element returned.
 - The product list url for each category is in the following format:
 ```
-https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias=$SEARCH_ALIAS&field-keywords=-12345&page=$PAGE_NO
+https://www.amazon.com/s/ref=nb_sb_noss?url=$SEARCH_ALIAS&field-keywords=-12345&page=$PAGE_NO
 
 Replace the $SEARCH_ALIAS with category name and $PAGE_NO with the desired product list.
 ```
