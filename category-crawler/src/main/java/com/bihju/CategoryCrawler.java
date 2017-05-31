@@ -1,8 +1,9 @@
 package com.bihju;
 
-import com.bihju.Document.Category;
+import com.bihju.service.CategoryService;
 import lombok.extern.log4j.Log4j;
 import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.net.Authenticator;
@@ -20,11 +21,13 @@ public class CategoryCrawler {
     private static final String PRODUCT_LIST_URL = "https://www.amazon.com/s/ref=nb_sb_noss?url=$SEARCH_ALIAS&field-keywords=-12345&page=$PAGE_NO";
     private static final String WHAT_IS_MY_IP_ADDRESS = "https://whatismyipaddress.com";
     private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36";
-
     private static final String CATEGORY_SELECTOR = "#searchDropdownBox > option:nth-child($NUMBER)";
     private static final int TIMEOUT_IN_MILLISECONDS = 100000;
     private final String AUTH_USER = "bittiger";
     private final String AUTH_PASSWORD = "cs504";
+
+    @Autowired
+    private CategoryService categoryService;
 
     public CategoryCrawler(String proxyFilePath, String logFilePath) {
         initProxyList(proxyFilePath);
@@ -65,8 +68,7 @@ public class CategoryCrawler {
             String categorySearchAlias = "search-alias=alexa-skills";  // for testing
             System.out.println("category = " + categoryName + ", search-alias = " + categorySearchAlias);
             String productListUrl = PRODUCT_LIST_URL.replace("$SEARCH_ALIAS", categorySearchAlias);
-
-            Category category = new Category(categoryName, productListUrl);
+            categoryService.saveCategory(categoryName, productListUrl);
 
 //            break; // remove this one when all tested
 //            try {
