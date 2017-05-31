@@ -4,17 +4,18 @@ import com.bihju.service.CategoryService;
 import lombok.extern.log4j.Log4j;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.*;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Log4j
-public class CategoryCrawler {
+@SpringBootApplication
+public class CategoryCrawler implements CommandLineRunner {
     private List<String> proxyList;
     private int index = 0;
     private static final String AMAZON_URL = "https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias=aps&field-keywords=-12345";
@@ -29,9 +30,7 @@ public class CategoryCrawler {
     @Autowired
     private CategoryService categoryService;
 
-    public CategoryCrawler(String proxyFilePath, String logFilePath) {
-        initProxyList(proxyFilePath);
-        initLog(logFilePath);
+    public CategoryCrawler() {
     }
 
     public static void main(String[] args) {
@@ -40,9 +39,17 @@ public class CategoryCrawler {
             return;
         }
 
-        CategoryCrawler categoryCrawler = new CategoryCrawler(args[0], args[1]);
+        SpringApplication.run(CategoryCrawler.class, args);
+    }
+
+    @Override
+    public void run(String... strings) throws Exception {
+        String proxyFilePath = strings[0];
+        String logFilePath = strings[1];
+        initProxyList(proxyFilePath);
+        initLog(logFilePath);
         try {
-            categoryCrawler.startCrawling();
+            startCrawling();
         } catch (IOException e) {
             log.debug(e.getMessage());
         }
