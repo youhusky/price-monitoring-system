@@ -68,7 +68,11 @@ public class CategoryCrawler implements CommandLineRunner {
         while (true) {
             String selector = CATEGORY_SELECTOR.replace("$NUMBER", String.valueOf(i++));
             Elements results = doc.select(selector);
+            if (i == 3) {
+                break;
+            }
             if (results.isEmpty()) {
+                log.debug("All categories are retrieved.");
                 break;
             }
 
