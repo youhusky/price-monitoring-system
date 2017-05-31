@@ -1,7 +1,6 @@
 package com.bihju;
 
 import lombok.extern.log4j.Log4j;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -19,10 +18,9 @@ public class CategoryCrawler {
     private List<String> proxyList;
     private int index = 0;
     BufferedWriter logBFWriter;
-    private static final String AMAZON_URL = "https://www.amazon.com";
+    private static final String AMAZON_URL = "https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias=aps&field-keywords=-12345";
     private static final String WHAT_IS_MY_IP_ADDRESS = "https://whatismyipaddress.com";
-//    private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36";
-    private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36";
+    private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36";
 
     private static final String CATEGORY_SELECTOR = "#searchDropdownBox > option:nth-child($NUMBER)";
     private static final int TIMEOUT_IN_MILLISECONDS = 100000;
@@ -53,25 +51,23 @@ public class CategoryCrawler {
     public void startCrawling() throws IOException {
         setProxy();
         Map<String, String> headers = createHeaders();
-        Connection connect = Jsoup.connect(AMAZON_URL);
-        Document doc = null;
-        if (connect != null) {
-            connect.headers(headers).userAgent(USER_AGENT).timeout(TIMEOUT_IN_MILLISECONDS);
-            doc = connect.get();
-        }
-
-//        Document doc = Jsoup.connect(AMAZON_URL).headers(headers).userAgent(USER_AGENT)
-//                .timeout(TIMEOUT_IN_MILLISECONDS).get();
-//        System.out.println(doc.text());
+        Document doc = Jsoup.connect(AMAZON_URL).headers(headers).userAgent(USER_AGENT)
+                .timeout(TIMEOUT_IN_MILLISECONDS).get();
+        System.out.println(doc.text());
         int i = 2;
-        while (true) {
+        while (false) { // turn on when ready
             String selector = CATEGORY_SELECTOR.replace("$NUMBER", String.valueOf(i++));
             Elements results = doc.select(selector);
-            if (results == null) {
+            if (results.isEmpty()) {
                 break;
             }
 
             System.out.println("result = " + results.text());
+            try {
+                Thread.sleep(2000000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
         }
 
