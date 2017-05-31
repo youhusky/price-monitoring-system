@@ -1,6 +1,6 @@
 package com.bihju.service.impl;
 
-import com.bihju.Document.Category;
+import com.bihju.domain.Category;
 import com.bihju.repository.CategoryRepository;
 import com.bihju.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;

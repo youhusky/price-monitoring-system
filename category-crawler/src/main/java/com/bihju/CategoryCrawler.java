@@ -3,6 +3,8 @@ package com.bihju;
 import com.bihju.service.CategoryService;
 import lombok.extern.log4j.Log4j;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -11,7 +13,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.io.*;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Log4j
 @SpringBootApplication
@@ -44,10 +49,8 @@ public class CategoryCrawler implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        String proxyFilePath = strings[0];
-        String logFilePath = strings[1];
-        initProxyList(proxyFilePath);
-        initLog(logFilePath);
+        initProxyList(strings[0]);
+        initLog(strings[1]);
         try {
             startCrawling();
         } catch (IOException e) {
@@ -58,37 +61,36 @@ public class CategoryCrawler implements CommandLineRunner {
     public void startCrawling() throws IOException {
         setProxy();
         Map<String, String> headers = createHeaders();
-//        Document doc = Jsoup.connect(AMAZON_URL).headers(headers).userAgent(USER_AGENT)
-//                .timeout(TIMEOUT_IN_MILLISECONDS).get();
-//        System.out.println(doc.text());
-//        int i = 2;
-//        while (true) {
-//            String selector = CATEGORY_SELECTOR.replace("$NUMBER", String.valueOf(i++));
-//            Elements results = doc.select(selector);
-//            if (results.isEmpty()) {
-//                break;
-//            }
-//
-//            String categoryName = results.get(0).text();
-//            String categorySearchAlias = results.get(0).attr("value");
-            String categoryName = "Alexa Skills";   // for testing
-            String categorySearchAlias = "search-alias=alexa-skills";  // for testing
+        Document doc = Jsoup.connect(AMAZON_URL).headers(headers).userAgent(USER_AGENT)
+                .timeout(TIMEOUT_IN_MILLISECONDS).get();
+        System.out.println(doc.text());
+        int i = 2;
+        while (true) {
+            String selector = CATEGORY_SELECTOR.replace("$NUMBER", String.valueOf(i++));
+            Elements results = doc.select(selector);
+            if (results.isEmpty()) {
+                break;
+            }
+
+            String categoryName = results.get(0).text();
+            String categorySearchAlias = results.get(0).attr("value");
+//            String categoryName = "Alexa Skills";   // for testing
+//            String categorySearchAlias = "search-alias=alexa-skills";  // for testing
             System.out.println("category = " + categoryName + ", search-alias = " + categorySearchAlias);
             String productListUrl = PRODUCT_LIST_URL.replace("$SEARCH_ALIAS", categorySearchAlias);
             categoryService.saveCategory(categoryName, productListUrl);
 
-//            break; // remove this one when all tested
-//            try {
-//                Thread.sleep(2000000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+            try {
+                Thread.sleep(20000); // wait 2 seconds before next round
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    private void initProxyList(String proxy_file) {
+    private void initProxyList(String proxyFilePath) {
         proxyList = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(proxy_file))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(proxyFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
@@ -138,9 +140,9 @@ public class CategoryCrawler implements CommandLineRunner {
         return true;
     }
 
-    private void initLog(String log_path) {
+    private void initLog(String logFilePath) {
         try {
-            File log = new File(log_path);
+            File log = new File(logFilePath);
             if (!log.exists()) {
                 log.createNewFile();
             }

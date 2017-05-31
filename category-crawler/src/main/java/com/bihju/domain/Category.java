@@ -1,4 +1,4 @@
-package com.bihju.Document;
+package com.bihju.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,6 +19,11 @@ public class Category {
 
     private String categoryName;
     private String productListUrl;
+
+    public Category() {
+        this.categoryName = null;
+        this.productListUrl = null;
+    }
 
     @JsonCreator
     public Category(@JsonProperty("category-name") String categoryName,
