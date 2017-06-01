@@ -4,6 +4,7 @@ import com.bihju.domain.Category;
 import com.bihju.domain.Product;
 import com.bihju.service.CategoryService;
 import com.bihju.util.CrawlerUtil;
+import com.netflix.discovery.converters.Auto;
 import lombok.extern.log4j.Log4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,6 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.messaging.Source;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.support.MessageBuilder;
 
 import java.io.*;
 import java.net.Authenticator;
@@ -23,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j
+@EnableBinding(Source.class)
 @SpringBootApplication
 public class ProductCrawler implements CommandLineRunner {
     private List<String> proxyList;
@@ -44,6 +50,8 @@ public class ProductCrawler implements CommandLineRunner {
 
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private MessageChannel output;
 
     public ProductCrawler() {
     }
@@ -124,7 +132,7 @@ public class ProductCrawler implements CommandLineRunner {
     }
 
     private void sendProductToQueue(Product product) {
-        // TODO
+        output.send(MessageBuilder.withPayload(product).build());
     }
 
     private Product createProduct(Element doc, int index, long categoryId, BufferedWriter logBufferedWriter) throws IOException {

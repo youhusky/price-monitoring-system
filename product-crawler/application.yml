@@ -3,7 +3,10 @@ server:
 spring:
   application:
     name: product-crawler
-
+  cloud:
+    stream:
+      bindings:
+        output: products
   datasource:
     url: jdbc:mysql://localhost/price_monitor
     username: testuser
