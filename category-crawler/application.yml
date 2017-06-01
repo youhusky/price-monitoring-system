@@ -18,6 +18,3 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL5Dialect
     hibernate.ddl-auto: update
-
-  proxy: proxyFile.csv
-  log-file: logFile
