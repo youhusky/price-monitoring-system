@@ -71,12 +71,24 @@ public class ProductCrawler implements CommandLineRunner {
         initLog(strings[1]);
         initCategoryProductListUrl();
         try {
-            startCrawling();
-        } catch (IOException e) {
-            log.error(e.getMessage());
+//            startCrawling();
+            testQueue();
+//        } catch (IOException e) {
+//            log.error(e.getMessage());
         } finally {
             cleanup();
         }
+    }
+
+    private void testQueue() {
+        Product product = new Product();
+        product.setProductId("ABCDEFG");
+        product.setDetailUrl("https://www.yahoo.com");
+        product.setThumnail("https://www.yahoo.com");
+        product.setTitle("Test for products queue");
+        product.setCategoryId(12345);
+        product.setPrice(0.0);
+        sendProductToQueue(product);
     }
 
     private void initCategoryProductListUrl() {
