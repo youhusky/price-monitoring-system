@@ -1,0 +1,32 @@
+server:
+  port: 9002
+spring:
+  application:
+    name: product-monitor
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: products
+        output:
+          destination: reduced-products
+  datasource:
+    url: jdbc:mysql://localhost/price_monitor
+    username: testuser
+    password: testpass
+    driver-class-name: com.mysql.jdbc.Driver
+  redis.host: localhost
+  redis.port: 6379
+  redis.pool.max-idle: 8
+  redis.pool.min-idle: 0
+  redis.pool.max-active: 8
+  redis.pool.max-wait: -1
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    hibernate.ddl-auto: update

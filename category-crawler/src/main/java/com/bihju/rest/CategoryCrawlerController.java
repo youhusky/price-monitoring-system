@@ -1,6 +1,6 @@
 package com.bihju.rest;
 
-import com.bihju.CategoryCrawler;
+import com.bihju.CategoryCrawlerApp;
 import com.bihju.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +12,7 @@ public class CategoryCrawlerController {
     @Autowired
     private CategoryService categoryService;
     @Autowired
-    private CategoryCrawler categoryCrawler;
+    private CategoryCrawlerApp categoryCrawler;
 
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     public void crawlCategories() {

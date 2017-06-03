@@ -4,7 +4,6 @@ import com.bihju.domain.Category;
 import com.bihju.domain.Product;
 import com.bihju.service.CategoryService;
 import com.bihju.util.CrawlerUtil;
-import com.netflix.discovery.converters.Auto;
 import lombok.extern.log4j.Log4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,7 +29,7 @@ import java.util.Map;
 @Log4j
 @EnableBinding(Source.class)
 @SpringBootApplication
-public class ProductCrawler implements CommandLineRunner {
+public class ProductCrawlerApp implements CommandLineRunner {
     private List<String> proxyList;
     private int index = 0;
     private static final String WHAT_IS_MY_IP_ADDRESS = "https://whatismyipaddress.com";
@@ -49,11 +48,11 @@ public class ProductCrawler implements CommandLineRunner {
     private BufferedWriter logBufferedWriter;
 
     @Autowired
-    private CategoryService categoryService;
-    @Autowired
     private MessageChannel output;
+    @Autowired
+    private CategoryService categoryService;
 
-    public ProductCrawler() {
+    public ProductCrawlerApp() {
     }
 
     public static void main(String[] args) {
@@ -62,7 +61,7 @@ public class ProductCrawler implements CommandLineRunner {
             return;
         }
 
-        SpringApplication.run(ProductCrawler.class, args);
+        SpringApplication.run(ProductCrawlerApp.class, args);
     }
 
     @Override

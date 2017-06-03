@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Log4j
 @SpringBootApplication
-public class CategoryCrawler implements CommandLineRunner {
+public class CategoryCrawlerApp implements CommandLineRunner {
     private List<String> proxyList;
     private int index = 0;
     private static final String AMAZON_URL = "https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias=aps&field-keywords=-12345";
@@ -35,7 +35,7 @@ public class CategoryCrawler implements CommandLineRunner {
     @Autowired
     private CategoryService categoryService;
 
-    public CategoryCrawler() {
+    public CategoryCrawlerApp() {
     }
 
     public static void main(String[] args) {
@@ -44,7 +44,7 @@ public class CategoryCrawler implements CommandLineRunner {
             return;
         }
 
-        SpringApplication.run(CategoryCrawler.class, args);
+        SpringApplication.run(CategoryCrawlerApp.class, args);
     }
 
     @Override

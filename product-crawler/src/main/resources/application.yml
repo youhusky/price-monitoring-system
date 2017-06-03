@@ -6,7 +6,8 @@ spring:
   cloud:
     stream:
       bindings:
-        output: products
+        output:
+          destination: products
   datasource:
     url: jdbc:mysql://localhost/price_monitor
     username: testuser
