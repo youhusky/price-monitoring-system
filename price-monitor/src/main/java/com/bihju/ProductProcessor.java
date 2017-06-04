@@ -13,9 +13,6 @@ import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @MessageEndpoint
 @EnableBinding(Processor.class)
@@ -42,6 +39,7 @@ public class ProductProcessor {
             cacheProduct(product);
             productService.saveProduct(product);
         } else if (isPriceLower(product)) {
+            updateCache(product);
             productService.updateProduct(product);
             output.send(MessageBuilder.withPayload(product).build());
         }
@@ -49,6 +47,13 @@ public class ProductProcessor {
 
     private boolean isProductExist(Product product) {
         return this.template.hasKey(product.getProductId());
+    }
+
+    private void updateCache(Product product) {
+        String productId = product.getProductId();
+        ops.set(productId, String.valueOf(product.getPrice()));
+        log.debug("product price is updated in cache, productId = " + productId
+                + ", new price = " + ops.get(productId));
     }
 
     private void cacheProduct(Product product) {

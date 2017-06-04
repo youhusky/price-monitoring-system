@@ -13,10 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Source;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.support.MessageBuilder;
 
 import java.io.*;
 import java.net.Authenticator;
@@ -27,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j
-@EnableBinding(Source.class)
 @SpringBootApplication
 public class ProductCrawlerApp implements CommandLineRunner {
     private List<String> proxyList;
@@ -48,9 +43,9 @@ public class ProductCrawlerApp implements CommandLineRunner {
     private BufferedWriter logBufferedWriter;
 
     @Autowired
-    private MessageChannel output;
-    @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private ProductSource productSource;
 
     public ProductCrawlerApp() {
     }
@@ -87,7 +82,7 @@ public class ProductCrawlerApp implements CommandLineRunner {
         product.setTitle("Test for products queue");
         product.setCategoryId(12345);
         product.setPrice(0.0);
-        sendProductToQueue(product);
+        productSource.sendProductToQueue(product);
     }
 
     private void initCategoryProductListUrl() {
@@ -138,12 +133,8 @@ public class ProductCrawlerApp implements CommandLineRunner {
                 continue;
             }
 
-            sendProductToQueue(product);
+            productSource.sendProductToQueue(product);
         }
-    }
-
-    private void sendProductToQueue(Product product) {
-        output.send(MessageBuilder.withPayload(product).build());
     }
 
     private Product createProduct(Element doc, int index, long categoryId, BufferedWriter logBufferedWriter) throws IOException {
