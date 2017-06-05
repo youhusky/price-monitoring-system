@@ -1,5 +1,6 @@
 package com.bihju.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Data
 @Table(name = "user")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class User {
     public enum NotificationType {
         INSTANT, DAILY;
@@ -21,6 +23,7 @@ public class User {
 
     private String email;
     private String password;
-    private NotificationType notificationType;
-    private long lastUpdatedTime;
+    private NotificationType notificationType = NotificationType.INSTANT;
+    private long createTime;
+    private long updateTime;
 }

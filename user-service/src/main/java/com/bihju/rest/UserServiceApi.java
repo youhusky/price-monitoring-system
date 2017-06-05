@@ -37,4 +37,30 @@ public class UserServiceApi {
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
+
+    @RequestMapping(value="{userId}", method= RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public User updateUser(@RequestBody User user) {
+        try {
+            return userService.updateUser(user);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    @RequestMapping(value="{userId}", method= RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteUser(@PathVariable Long userId) {
+        try {
+            userService.deleteUser(userId);
+        } catch(RuntimeException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return e.getMessage();
+        }
+
+        return "Success";
+    }
 }

@@ -29,8 +29,24 @@ public class UserServiceImpl implements UserService {
             return existingUser;
         }
 
-        user.setLastUpdatedTime(System.currentTimeMillis());
+        user.setCreateTime(System.currentTimeMillis());
+        user.setUpdateTime(System.currentTimeMillis());
         return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(User user) {
+        User existingUser = findUserById(user.getId());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setPassword(user.getPassword());
+        existingUser.setUpdateTime(System.currentTimeMillis());
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        User existingUser = findUserById(userId);
+        userRepository.delete(existingUser);
     }
 
     @Override
@@ -50,6 +66,17 @@ public class UserServiceImpl implements UserService {
         }
 
         userCategory = new UserCategory(userId, categoryId);
+        userCategory.setCreateTime(System.currentTimeMillis());
+        userCategory.setUpdateTime(System.currentTimeMillis());
         userCategoryRepository.save(userCategory);
+    }
+
+    private User findUserById(Long userId) {
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("Invalid user, userId = " + userId);
+        }
+
+        return user;
     }
 }

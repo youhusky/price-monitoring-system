@@ -24,6 +24,8 @@ public class UserCategory {
 
     private Long userId;
     private Long categoryId;
+    private long createTime;
+    private long updateTime;
 
     @JsonCreator
     public UserCategory(@JsonProperty("userId") Long userId, @JsonProperty("categoryId") Long categoryId) {

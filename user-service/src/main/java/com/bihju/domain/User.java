@@ -24,5 +24,6 @@ public class User {
     private String email;
     private String password;
     private NotificationType notificationType = NotificationType.INSTANT;
-    private long lastUpdatedTime;
+    private long createTime;
+    private long updateTime;
 }
