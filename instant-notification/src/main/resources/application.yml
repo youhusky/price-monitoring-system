@@ -1,0 +1,41 @@
+server:
+  port: 9003
+spring:
+  application:
+    name: instant-notification
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: reduced-products
+  mail:
+    host: smtp.gmail.com
+    port: 587
+#    host: localhost
+#    port: 25
+    username: gmail id
+    password: gmail pass
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connecttimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
+  datasource:
+    url: jdbc:mysql://localhost/price_monitor
+    username: testuser
+    password: testpass
+    driver-class-name: com.mysql.jdbc.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    hibernate.ddl-auto: update
