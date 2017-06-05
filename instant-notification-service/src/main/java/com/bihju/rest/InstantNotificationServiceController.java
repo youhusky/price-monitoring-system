@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class InstantNotifierController {
+public class InstantNotificationServiceController {
     private ReducedProductSink reducedProductSink;
 
     @Autowired
-    public InstantNotifierController(ReducedProductSink reducedProductSink) {
+    public InstantNotificationServiceController(ReducedProductSink reducedProductSink) {
         this.reducedProductSink = reducedProductSink;
     }
 

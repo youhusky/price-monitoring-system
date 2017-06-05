@@ -22,7 +22,7 @@
         <module>category-crawler</module>
         <module>product-crawler</module>
         <module>price-monitor</module>
-        <module>instant-notifier</module>
+        <module>instant-notification-service</module>
     </modules>
 
     <properties>
