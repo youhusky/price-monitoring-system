@@ -23,6 +23,7 @@
         <module>product-crawler</module>
         <module>price-monitor</module>
         <module>instant-notification-service</module>
+        <module>user-service</module>
     </modules>
 
     <properties>
