@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @Log4j
-public class InstantNotificationApp {
+public class InstantNotifierApp {
     public static void main(String[] args) {
-        SpringApplication.run(InstantNotificationApp.class, args);
+        SpringApplication.run(InstantNotifierApp.class, args);
     }
 }

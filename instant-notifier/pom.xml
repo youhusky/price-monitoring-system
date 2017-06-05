@@ -10,9 +10,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>instant-notification</artifactId>
+    <artifactId>instant-notifier</artifactId>
 
-    <name>Instant Notification</name>
+    <name>Instant Notifier</name>
     <description>Notify user if there is a price reduction on subscribed category</description>
 
     <dependencies>
