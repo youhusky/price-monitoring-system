@@ -32,6 +32,19 @@ public class UserServiceApi {
         return "Success";
     }
 
+    @RequestMapping(value="{userId}/categories/{categoryId}", method= RequestMethod.DELETE)
+    public String unsubscribe(@PathVariable Long userId, @PathVariable Long categoryId) {
+        try {
+            userService.unSubscribeCategory(userId, categoryId);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return e.getMessage();
+        }
+
+        return "Success";
+    }
+
     @RequestMapping(value="", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@RequestBody User user) {
@@ -63,4 +76,6 @@ public class UserServiceApi {
 
         return "Success";
     }
+
+
 }

@@ -71,6 +71,25 @@ public class UserServiceImpl implements UserService {
         userCategoryRepository.save(userCategory);
     }
 
+    @Override
+    public void unSubscribeCategory(Long userId, Long categoryId) {
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("Invalid user id: " + userId);
+        }
+        Category category = categoryRepository.findCategoryById(categoryId);
+        if (category == null) {
+            throw new RuntimeException("Invalid category id: " + categoryId);
+        }
+
+        UserCategory userCategory = userCategoryRepository.findUserCategoryByUserIdAndCategoryId(userId, categoryId);
+        if (userCategory == null) {
+            throw new RuntimeException("User did not subscribe the category, userId: " + userId + ", categoryId" + categoryId);
+        }
+
+        userCategoryRepository.delete(userCategory);
+    }
+
     private User findUserById(Long userId) {
         User user = userRepository.findUserById(userId);
         if (user == null) {
