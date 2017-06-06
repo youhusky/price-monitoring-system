@@ -12,24 +12,28 @@ import javax.mail.internet.MimeMessage;
 @Component
 @Log4j
 public class MailUtil {
-    @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    public MailUtil(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     public void send(String receivers, String replyTo, String from, String subject, String body) {
 
-        MimeMessage mail = javaMailSender.createMimeMessage();
+        MimeMessage message = javaMailSender.createMimeMessage();
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(receivers);
             helper.setReplyTo(replyTo);
             helper.setFrom(from);
             helper.setSubject(subject);
-            helper.setText(body);
+            helper.setText(body, true);
         } catch (MessagingException e) {
             e.printStackTrace();
             log.warn("Failed to send mail to " + receivers);
         } finally {}
 
-        javaMailSender.send(mail);
+        javaMailSender.send(message);
     }
 }

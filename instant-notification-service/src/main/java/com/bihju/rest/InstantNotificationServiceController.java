@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/instant-notify")
 public class InstantNotificationServiceController {
     private ReducedProductSink reducedProductSink;
 
@@ -16,13 +16,15 @@ public class InstantNotificationServiceController {
         this.reducedProductSink = reducedProductSink;
     }
 
-    @RequestMapping(name="products", method= RequestMethod.POST)
+    @RequestMapping(value="products", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void sendMail(@RequestBody Product product) {
+    public String sendMail(@RequestBody Product product) {
         try {
             reducedProductSink.processProducts(product);
+            return "Success";
         } catch (Exception e) {
             e.printStackTrace();
+            return e.getMessage();
         }
     }
 }

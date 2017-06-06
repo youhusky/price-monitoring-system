@@ -9,12 +9,10 @@ spring:
         input:
           destination: reduced-products
   mail:
-    host: smtp.gmail.com
+    host: smtp.mail.yahoo.com
     port: 587
-#    host: localhost
-#    port: 25
-    username: gmail id
-    password: gmail pass
+    username: my yahoo test mail address
+    password: my yahoo test mail password
     properties:
       mail:
         smtp:
