@@ -2,7 +2,7 @@ server:
   port: 9002
 spring:
   application:
-    name: product-monitor
+    name: price-monitor
   cloud:
     stream:
       bindings:

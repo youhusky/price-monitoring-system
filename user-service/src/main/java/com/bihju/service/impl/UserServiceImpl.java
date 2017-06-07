@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
         existingUser.setEmail(user.getEmail());
         existingUser.setPassword(user.getPassword());
         existingUser.setUpdateTime(System.currentTimeMillis());
-        return userRepository.save(user);
+        return userRepository.save(existingUser);
     }
 
     @Override

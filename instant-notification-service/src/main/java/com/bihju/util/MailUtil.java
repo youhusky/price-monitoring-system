@@ -19,7 +19,7 @@ public class MailUtil {
         this.javaMailSender = javaMailSender;
     }
 
-    public void send(String receivers, String replyTo, String from, String subject, String body) {
+    public void send(String[] receivers, String replyTo, String from, String subject, String body) {
 
         MimeMessage message = javaMailSender.createMimeMessage();
         try {

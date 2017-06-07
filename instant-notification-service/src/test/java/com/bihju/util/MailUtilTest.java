@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class MailUtilTest {
-    private String MAIL_USER = "my yahoo mail address";
-    private String MAIL_PASS = "my yahoo mail password";
-    private String MAIL_TEST_RECIPIENT = "my test recipient";
+    private String MAIL_USER = "myTestMail@gmail.com";
+    private String MAIL_PASS = "myTestMailPassword";
+    private String[] MAIL_TEST_RECIPIENT = new String[] {"myRecipient1@gmail.com","myRecipient2@gmail.com"};
 
     @Test
     public void testSendMailSuccess() throws IOException {
         JavaMailSenderImpl javaMailSenderImpl = new JavaMailSenderImpl();
-        javaMailSenderImpl.setHost("smtp.mail.yahoo.com");
+        javaMailSenderImpl.setHost("smtp.gmail.com");
         javaMailSenderImpl.setPort(587);
         javaMailSenderImpl.setUsername(MAIL_USER);
         javaMailSenderImpl.setPassword(MAIL_PASS);

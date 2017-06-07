@@ -4,7 +4,6 @@ import com.bihju.domain.Product;
 import com.bihju.service.UserService;
 import com.bihju.util.MailUtil;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -39,15 +38,15 @@ public class ReducedProductSink {
         long categoryId = product.getCategoryId();
         List<String> emails = userService.findUsersByCategoryId(categoryId);
         if (!emails.isEmpty()) {
-            sendNotification(emails, product);
+            sendNotification(emails.toArray(new String[0]), product);
         }
     }
 
-    private void sendNotification(List<String> emails, Product product) {
+    private void sendNotification(String[] emails, Product product) {
         String body = MAIL_TEMPLATE.replace("$PRODUCT_TITLE", product.getTitle())
                 .replace("$NEW_PRICE", String.valueOf(product.getPrice()))
                 .replace("$OLD_PRICE", String.valueOf(product.getOldPrice()));
-        mailUtil.send(StringUtils.join(emails, ","), MAIL_USER, MAIL_USER
+        mailUtil.send(emails, MAIL_USER, MAIL_USER
                 , MAIL_SUBJECT, body);
     }
 }

@@ -77,8 +77,8 @@ public class ProductCrawlerApp implements CommandLineRunner {
     private void testQueue() {
         Product product = new Product();
         product.setProductId("ABCDEFG");
-        product.setDetailUrl("https://www.yahoo.com");
-        product.setThumnail("https://www.yahoo.com");
+        product.setDetailUrl("https://www.google.com");
+        product.setThumnail("https://www.google.com");
         product.setTitle("Test for products queue");
         product.setCategoryId(12345);
         product.setPrice(0.0);

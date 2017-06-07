@@ -9,19 +9,19 @@ spring:
         input:
           destination: reduced-products
   mail:
-    host: smtp.mail.yahoo.com
+    host: smtp.gmail.com
     port: 587
-    username: my yahoo test mail address
-    password: my yahoo test mail password
+    username: myTestMail@gmail.com
+    password: myTestMailPassword
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-          connecttimeout: 5000
-          timeout: 3000
-          writetimeout: 5000
+          connecttimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
 
   datasource:
     url: jdbc:mysql://localhost/price_monitor
