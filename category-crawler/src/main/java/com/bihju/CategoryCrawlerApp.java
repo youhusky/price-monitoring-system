@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.*;
 import java.net.Authenticator;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 @Log4j
 @SpringBootApplication
+@EnableScheduling
 public class CategoryCrawlerApp implements CommandLineRunner {
     private List<String> proxyList;
     private int index = 0;
@@ -49,13 +51,13 @@ public class CategoryCrawlerApp implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        initProxyList(strings[0]);
-        initLog(strings[1]);
-        try {
-            startCrawling();
-        } catch (IOException e) {
-            log.debug(e.getMessage());
-        }
+//        initProxyList(strings[0]);
+//        initLog(strings[1]);
+//        try {
+//            startCrawling();
+//        } catch (IOException e) {
+//            log.debug(e.getMessage());
+//        }
     }
 
     public void startCrawling() throws IOException {
