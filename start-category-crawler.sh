@@ -1,0 +1,1 @@
+java -jar category-crawler/target/category-crawler-1.0.0.BUILD-SNAPSHOT.jar category-crawler/proxyFile.csv category-crawler/logFile
