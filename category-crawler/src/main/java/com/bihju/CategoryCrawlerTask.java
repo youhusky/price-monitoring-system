@@ -38,9 +38,8 @@ public class CategoryCrawlerTask {
         this.categoryService = categoryService;
     }
 
-    public void init(String proxyFilePath, String logFilePath) {
+    public void init(String proxyFilePath) {
         initProxyList(proxyFilePath);
-        initLog(logFilePath);
         initHeaders();
     }
 
@@ -73,7 +72,7 @@ public class CategoryCrawlerTask {
             String categorySearchAlias = results.get(0).attr("value");
 //            String categoryName = "Alexa Skills";   // for testing
 //            String categorySearchAlias = "search-alias=alexa-skills";  // for testing
-            System.out.println("category = " + categoryName + ", search-alias = " + categorySearchAlias);
+            log.debug("category = " + categoryName + ", search-alias = " + categorySearchAlias);
             String productListUrl = PRODUCT_LIST_URL.replace("$SEARCH_ALIAS", categorySearchAlias);
             categoryService.saveCategory(categoryName, productListUrl);
 
@@ -134,19 +133,6 @@ public class CategoryCrawlerTask {
         }
 
         return true;
-    }
-
-    private void initLog(String logFilePath) {
-        try {
-            File log = new File(logFilePath);
-            if (!log.exists()) {
-                log.createNewFile();
-            }
-
-            FileWriter fw = new FileWriter(log.getAbsoluteFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void initHeaders() {

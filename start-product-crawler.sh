@@ -1,0 +1,1 @@
+java -jar product-crawler/target/product-crawler-1.0.0.BUILD-SNAPSHOT.jar product-crawler/proxyFile.csv

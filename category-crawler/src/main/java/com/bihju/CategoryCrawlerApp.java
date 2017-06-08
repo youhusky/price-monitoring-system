@@ -19,8 +19,8 @@ public class CategoryCrawlerApp implements CommandLineRunner {
     }
 
     public static void main(String[] args) {
-        if (args.length < 2) {
-            System.out.println("Usage: CategoryCrawler <proxyFilePath> <logFilePath>");
+        if (args.length < 1) {
+            System.out.println("Usage: CategoryCrawler <proxyFilePath>");
             return;
         }
 
@@ -29,7 +29,7 @@ public class CategoryCrawlerApp implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        categoryCrawlerTask.init(strings[0], strings[1]);
+        categoryCrawlerTask.init(strings[0]);
         categoryCrawlerTask.startCrawling();
     }
 }
