@@ -28,8 +28,6 @@ public class ProductCrawlerApp implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         productCrawlerTask.init(strings[0]);
-//        productCrawlerTask.startCrawling();
-        productCrawlerTask.testQueue();
+        productCrawlerTask.startCrawling();
     }
-
 }

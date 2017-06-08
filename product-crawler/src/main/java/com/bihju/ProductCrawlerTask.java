@@ -26,7 +26,6 @@ public class ProductCrawlerTask {
 
     private List<String> proxyList;
     private int index = 0;
-    private static final String WHAT_IS_MY_IP_ADDRESS = "https://whatismyipaddress.com";
     private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36";
     private static final String PRODUCT_SELECTOR = "li[data-asin]";
     private static final String TITLE_SELECTOR = "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div:nth-child(1) > a";
@@ -55,30 +54,18 @@ public class ProductCrawlerTask {
     public void startCrawling() {
         log.info("Start crawling at: " + dateFormat.format(new Date()));
 
-        setProxy();
         for (Category category : categoryList) {
             String productListUrl = category.getProductListUrl();
             try {
                 crawlProduct(category);
             } catch (IOException e) {
                 log.warn("Failed to crawl product list url: " + productListUrl);
-                continue;
             }
 
             delayBetweenCrawling();
         }
     }
 
-    public void testQueue() {
-        Product product = new Product();
-        product.setProductId("ABCDEFG");
-        product.setDetailUrl("https://www.google.com");
-        product.setThumnail("https://www.google.com");
-        product.setTitle("Test for products queue");
-        product.setCategoryId(12345);
-        product.setPrice(0.0);
-        productSource.sendProductToQueue(product);
-    }
     private void initCategoryProductListUrl() {
         categoryList = categoryService.getAllCategories();
     }
@@ -88,15 +75,15 @@ public class ProductCrawlerTask {
     private void crawlProduct(Category category) throws IOException {
         int pageNum = 1;
         String productUrl = category.getProductListUrl().replace("$PAGE_NO", String.valueOf(pageNum++));
-        log.debug("category: " + category.getCategoryName() + ", productUrl = " + productUrl);
-        Document doc = Jsoup.connect(productUrl).headers(headers).userAgent(USER_AGENT)
-                .timeout(TIMEOUT_IN_MILLISECONDS).get();
-        log.debug("doc = " + doc.text());
-        Elements results = doc.select(PRODUCT_SELECTOR);
-        if (results.isEmpty()) {
-            log.debug("All products are retrieved for category: " + category.getCategoryName());
+        log.info("category: " + category.getCategoryName() + ", productUrl = " + productUrl);
+        Document doc = getDocument(productUrl);
+        if (doc == null) {
+            log.error("Failed to retrieve from productUrl: " + productUrl);
             return;
         }
+        log.debug("doc = " + doc.text());
+        Elements results = doc.select(PRODUCT_SELECTOR);
+        log.info("num of results = " + results.size());
 
         for (int i = 0; i < results.size(); i++) {
             int index = CrawlerUtil.getResultIndex(results.get(i));
@@ -285,8 +272,12 @@ public class ProductCrawlerTask {
         System.setProperty("socksProxyPort", "61336"); // set proxy port
     }
 
-    private void setProxy() {
+    private Document getDocument(String productUrl) {
+        Document document = null;
+        int retryCount = proxyList.size();
+
         do {
+            retryCount--;
             String proxy = proxyList.get(index);
             log.debug("proxy = " + proxy);
             System.setProperty("socksProxyHost", proxy); // set proxy server
@@ -294,24 +285,22 @@ public class ProductCrawlerTask {
             if (index == proxyList.size()) {
                 index = 0;
             }
-        } while (!testProxy());
-    }
+            try {
+                document = Jsoup.connect(productUrl).headers(headers).userAgent(USER_AGENT)
+                        .timeout(TIMEOUT_IN_MILLISECONDS).get();
+            } catch (IOException | IllegalArgumentException e) {
+                log.info("textProxy() failed: index = " + index);
+            }
+        } while (document == null && retryCount > 0);
 
-    private boolean testProxy() {
-        try {
-            Jsoup.connect(WHAT_IS_MY_IP_ADDRESS).headers(headers).userAgent(USER_AGENT)
-                    .timeout(TIMEOUT_IN_MILLISECONDS).get();
-        } catch (IOException e) {
-            return false;
-        }
-
-        return true;
+        return document;
     }
 
     private void initHeaders() {
         headers = new HashMap<>();
-        headers.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-        headers.put("Accept-Encoding", "gzip, deflate, sdch, br");
-        headers.put("Accept-Language", "en-US,en;q=0.8");
+        headers.put("Accept", "text/html,text/plain");
+        headers.put("Accept-Language", "en-us,en");
+        headers.put("Accept-Encoding", "gzip");
+        headers.put("Accept-Charset", "utf-8");
     }
 }
