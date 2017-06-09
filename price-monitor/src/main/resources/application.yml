@@ -7,9 +7,14 @@ spring:
     stream:
       bindings:
         input:
+          group: default
           destination: products
+          durableSubscription: true
         output:
+          group: default
           destination: reduced-products
+          durableSubscription: true
+
   datasource:
     url: jdbc:mysql://localhost/price_monitor
     username: testuser

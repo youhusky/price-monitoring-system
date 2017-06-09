@@ -81,7 +81,7 @@ public class ProductCrawlerTask {
             log.error("Failed to retrieve from productUrl: " + productUrl);
             return;
         }
-        log.debug("doc = " + doc.text());
+        log.info("doc = " + doc.text());
         Elements results = doc.select(PRODUCT_SELECTOR);
         log.info("num of results = " + results.size());
 
@@ -197,7 +197,7 @@ public class ProductCrawlerTask {
             String detailUrl = element.attr("href");
             log.debug("detailUrl = " + detailUrl);
             String normalizedUrl = normalizeUrl(detailUrl);
-            log.debug("normalized detailUrl = " + normalizedUrl);
+            log.info("normalized detailUrl = " + normalizedUrl);
             product.setDetailUrl(normalizedUrl);
         } else {
             log.info("Cannot parse detailUrl for product, index = " + index);
@@ -217,7 +217,7 @@ public class ProductCrawlerTask {
         String normalizedUrl = i == -1 ? url : url.substring(0, i - 1);
 
         if (normalizedUrl == null || normalizedUrl.trim().isEmpty()) {
-            log.debug("Empty url: " + url);
+            log.info("Empty url: " + url);
         }
 
         return normalizedUrl;
@@ -279,7 +279,7 @@ public class ProductCrawlerTask {
         do {
             retryCount--;
             String proxy = proxyList.get(index);
-            log.debug("proxy = " + proxy);
+            log.info("proxy = " + proxy);
             System.setProperty("socksProxyHost", proxy); // set proxy server
             index++;
             if (index == proxyList.size()) {

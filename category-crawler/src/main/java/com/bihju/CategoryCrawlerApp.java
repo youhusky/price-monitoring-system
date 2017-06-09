@@ -30,6 +30,6 @@ public class CategoryCrawlerApp implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         categoryCrawlerTask.init(strings[0]);
-        categoryCrawlerTask.startCrawling();
+//        categoryCrawlerTask.startCrawling();
     }
 }
