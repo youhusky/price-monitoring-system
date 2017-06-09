@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/products")
+@RequestMapping("api/product-crawler")
 public class ProductCrawlerApi {
     private ProductSource productSource;
 
@@ -16,7 +16,13 @@ public class ProductCrawlerApi {
         this.productSource = productSource;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+
+    @RequestMapping(value = "test", method = RequestMethod.GET)
+    public String test() {
+        return "Success";
+    }
+
+    @RequestMapping(value = "products", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public String sendProduct(@RequestBody Product product) {
         productSource.sendProductToQueue(product);

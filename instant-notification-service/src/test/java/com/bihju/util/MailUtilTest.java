@@ -1,5 +1,6 @@
 package com.bihju.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.io.IOException;
@@ -9,6 +10,7 @@ public class MailUtilTest {
     private String MAIL_USER = "myTestMail@gmail.com";
     private String MAIL_PASS = "myTestMailPassword";
     private String[] MAIL_TEST_RECIPIENT = new String[] {"myRecipient1@gmail.com","myRecipient2@gmail.com"};
+    @Autowired
 
 //    NOTE: Turn off unit testing since it requires real mail user/password
 //    @Test

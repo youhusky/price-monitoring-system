@@ -7,13 +7,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/instant-notify")
+@RequestMapping("/api/instant-notification")
 public class InstantNotificationServiceController {
     private ReducedProductSink reducedProductSink;
 
     @Autowired
     public InstantNotificationServiceController(ReducedProductSink reducedProductSink) {
         this.reducedProductSink = reducedProductSink;
+    }
+
+
+    @RequestMapping(value = "test", method = RequestMethod.GET)
+    public String test() {
+        return "Success";
     }
 
     @RequestMapping(value="products", method= RequestMethod.POST)

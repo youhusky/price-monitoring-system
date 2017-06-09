@@ -11,13 +11,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/price-monitor")
 @Log4j
 public class PriceMonitorApi {
     @Autowired
     private ProductProcessor productSink;
     @Autowired
     private ProductService productService;
+
+    @RequestMapping(value = "test", method = RequestMethod.GET)
+    public String test() {
+        return "Success";
+    }
 
     @RequestMapping(value = "products", method = RequestMethod.POST)
     public Product parseProduct(@RequestBody Product product) {
