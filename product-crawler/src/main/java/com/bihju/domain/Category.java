@@ -15,10 +15,12 @@ import javax.persistence.Table;
 public class Category {
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
 
     private String categoryName;
     private String productListUrl;
+    private long createTime;
+    private long updateTime;
 
     public Category() {
         this.categoryName = null;

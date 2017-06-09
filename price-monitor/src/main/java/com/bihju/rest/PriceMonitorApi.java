@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j
 public class PriceMonitorApi {
     @Autowired
-    private ProductProcessor productSink;
+    private ProductProcessor productProcessor;
     @Autowired
     private ProductService productService;
 
@@ -27,7 +27,7 @@ public class PriceMonitorApi {
     @RequestMapping(value = "products", method = RequestMethod.POST)
     public Product parseProduct(@RequestBody Product product) {
         try {
-            productSink.checkProduct(product);
+            productProcessor.checkProduct(product);
             return productService.getProduct(product.getProductId());
         } catch (Exception e) {
             e.printStackTrace();

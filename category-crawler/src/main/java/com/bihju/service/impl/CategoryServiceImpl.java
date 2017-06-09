@@ -20,9 +20,12 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findCategoryByCategoryName(categoryName);
         if (category != null) {
             category.setProductListUrl(productListUrl);
+            category.setUpdateTime(System.currentTimeMillis());
             categoryRepository.save(category);
         } else {
             category = new Category(categoryName, productListUrl);
+            category.setCreateTime(System.currentTimeMillis());
+            category.setUpdateTime(System.currentTimeMillis());
             categoryRepository.save(category);
         }
     }

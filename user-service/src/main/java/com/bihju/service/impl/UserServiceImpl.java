@@ -68,6 +68,8 @@ public class UserServiceImpl implements UserService {
         userCategory = new UserCategory(userId, categoryId);
         userCategory.setCreateTime(System.currentTimeMillis());
         userCategory.setUpdateTime(System.currentTimeMillis());
+        userCategory.setCreateTime(System.currentTimeMillis());
+        userCategory.setUpdateTime(System.currentTimeMillis());
         userCategoryRepository.save(userCategory);
     }
 

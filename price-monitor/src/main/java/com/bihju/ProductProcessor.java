@@ -37,11 +37,18 @@ public class ProductProcessor {
         log.info("Product received, productId = " + product.getProductId());
         if (!isProductExist(product)) {
             cacheProduct(product);
-            productService.saveProduct(product);
-        } else if (isPriceLower(product)) {
-            updateCache(product);
-            productService.updateProduct(product);
-            output.send(MessageBuilder.withPayload(product).build());
+            productService.createProduct(product);
+        } else {
+            double oldPrice = getOldPrice(product);
+            double newPrice = product.getPrice();
+
+            if (oldPrice != newPrice) {
+                updateCache(product);
+                productService.updateProduct(product);
+            }
+            if (oldPrice > newPrice) {
+                output.send(MessageBuilder.withPayload(product).build());
+            }
         }
     }
 
@@ -63,10 +70,8 @@ public class ProductProcessor {
                 + ", cached price = " + ops.get(productId));
     }
 
-    // compare price
-    private boolean isPriceLower(Product product) {
+    private double getOldPrice(Product product) {
         String productId = product.getProductId();
-        double oldPrice = Double.parseDouble(ops.get(productId));
-        return oldPrice > product.getPrice();
+        return Double.parseDouble(ops.get(productId));
     }
 }

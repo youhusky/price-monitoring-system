@@ -20,10 +20,10 @@ import javax.persistence.Table;
 public class UserCategory {
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
 
-    private Long userId;
-    private Long categoryId;
+    private long userId;
+    private long categoryId;
     private long createTime;
     private long updateTime;
 

@@ -22,4 +22,6 @@ public class Product {
     private String detailUrl;
     private double price;
     private double oldPrice;
+    private long createTime;
+    private long updateTime;
 }

@@ -16,8 +16,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void saveProduct(Product product) {
+    public void createProduct(Product product) {
         product.setOldPrice(product.getPrice());
+        product.setCreateTime(System.currentTimeMillis());
+        product.setUpdateTime(System.currentTimeMillis());
         productRepository.save(product);
     }
 
@@ -26,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
         Product current = productRepository.findProductByProductId(product.getProductId());
         current.setOldPrice(current.getPrice());
         current.setPrice(product.getPrice());
-
+        current.setUpdateTime(System.currentTimeMillis());
         productRepository.save(current);
     }
 

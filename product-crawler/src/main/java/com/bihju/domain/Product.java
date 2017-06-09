@@ -13,7 +13,7 @@ import javax.persistence.Table;
 public class Product {
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
 
     private String productId;
     private long categoryId;
@@ -22,4 +22,6 @@ public class Product {
     private String detailUrl;
     private double price;
     private double oldPrice;
+    private long createTime;
+    private long updateTime;
 }
