@@ -65,7 +65,7 @@ public class ProductCrawlerTask {
 
     @Scheduled(cron = "0 0 1-22/4 * * *")   // every 4 hours, starting from 1:00 AM
     public void startCrawling() {
-        log.info("Start crawling at: " + dateFormat.format(new Date()));
+        log.info("Start crawling, threadId: " + Thread.currentThread().getId());
 
         List<Category> categoryList = getAllSubscribedCategories();
         for (Category category : categoryList) {
@@ -78,6 +78,8 @@ public class ProductCrawlerTask {
 
             delayBetweenCrawling();
         }
+
+        log.info("End cralwing, threadId: " + Thread.currentThread().getId());
     }
 
     private List<Category> getAllSubscribedCategories() {

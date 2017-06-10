@@ -45,7 +45,7 @@ public class CategoryCrawlerTask {
 
     @Scheduled(cron = "0 0 0 * * SUN")   // every Sunday
     public void startCrawling() {
-        log.info("Start crawling at: " + dateFormat.format(new Date()));
+        log.info("Start crawling, threadId: " + Thread.currentThread().getId());
 
         setProxy();
         Document doc = null;
@@ -82,6 +82,8 @@ public class CategoryCrawlerTask {
                 e.printStackTrace();
             }
         }
+
+        log.info("End crawling, threadId: " + Thread.currentThread().getId());
     }
 
     private void initProxyList(String proxyFilePath) {

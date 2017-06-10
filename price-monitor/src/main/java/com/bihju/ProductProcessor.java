@@ -35,6 +35,7 @@ public class ProductProcessor {
     @ServiceActivator(inputChannel = Sink.INPUT)
     public void checkProduct(Product product) throws Exception {
         log.info("Product received, productId = " + product.getProductId());
+
         if (!isProductExist(product)) {
             cacheProduct(product);
             productService.createProduct(product);
