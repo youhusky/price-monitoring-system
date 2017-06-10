@@ -33,11 +33,11 @@ public class ProductCrawlerTask {
             "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div.a-row.a-spacing-mini > a > h2"
     };
     private static final String[] PRICE_WHOLE_SELECTORS = {
-            "#result_0 > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > span",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > span",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > span"
     };
     private static final String[] PRICE_FRACTION_SELECTORS = {
-            "#result_0 > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > sup.sx-price-fractional",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > sup.sx-price-fractional",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > sup.sx-price-fractional"
     };
     private static final String[] THUMNAIL_SELECTORS = {
@@ -45,7 +45,7 @@ public class ProductCrawlerTask {
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-left > div > div > a > img"
     };
     private static final String[] DETAIL_URL_SELECTORS = {
-            "#result_0 > div > div.a-row.a-spacing-none > div.a-row.a-spacing-mini > a",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div.a-row.a-spacing-mini > a",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div:nth-child(1) > a"
     };
     private static final int TIMEOUT_IN_MILLISECONDS = 100000;
