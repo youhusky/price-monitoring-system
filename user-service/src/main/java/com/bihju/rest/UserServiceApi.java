@@ -54,13 +54,7 @@ public class UserServiceApi {
     @RequestMapping(value="{userId}", method= RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public User updateUser(@RequestBody User user) {
-        try {
-            return userService.updateUser(user);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            log.error(e.getMessage());
-            return null;
-        }
+        return userService.updateUser(user);
     }
 
     @RequestMapping(value="{userId}", method= RequestMethod.DELETE)
