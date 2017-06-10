@@ -4,14 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "category")
+@Table(name = "category", indexes = {@Index(name = "index_category_name", columnList = "categoryName", unique = true)})
 public class Category {
     @Id
     @GeneratedValue

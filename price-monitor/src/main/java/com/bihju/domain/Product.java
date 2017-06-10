@@ -2,14 +2,11 @@ package com.bihju.domain;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "product")
+@Table(name = "product", indexes = {@Index(name = "index_product_id", columnList = "productId", unique = true)})
 public class Product {
     @Id
     @GeneratedValue
