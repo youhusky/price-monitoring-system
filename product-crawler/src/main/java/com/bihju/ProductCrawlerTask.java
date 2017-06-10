@@ -90,31 +90,35 @@ public class ProductCrawlerTask {
     // https://www.amazon.com/s/ref=nb_sb_noss?url=search-alias=alexa-skills&field-keywords=-12345&page=$PAGE_NO
     private void crawlProduct(Category category) throws IOException {
         int pageNum = 1;
-        String productUrl = category.getProductListUrl().replace("$PAGE_NO", String.valueOf(pageNum++));
-        log.info("category: " + category.getCategoryName() + ", productUrl = " + productUrl);
-        Document doc = getDocument(productUrl);
-        if (doc == null) {
-            log.error("Failed to retrieve from productUrl: " + productUrl);
-            return;
-        }
-        log.info("doc = " + doc.text());
-        Elements results = doc.select(PRODUCT_SELECTOR);
-        log.info("num of results = " + results.size());
-
-        for (int i = 0; i < results.size(); i++) {
-            int index = CrawlerUtil.getResultIndex(results.get(i));
-            if (index == -1) {
-                log.info("Cannot get result index for element: " + results.get(i).toString());
-                continue;
+        boolean isMorePages = true;
+        do {
+            String productUrl = category.getProductListUrl().replace("$PAGE_NO", String.valueOf(pageNum++));
+            log.info("category: " + category.getCategoryName() + ", productUrl = " + productUrl);
+            Document doc = getDocument(productUrl);
+            if (doc == null) {
+                log.warn("Failed to retrieve from productUrl: " + productUrl);
+                isMorePages = false;
+                return;
             }
+            log.info("doc = " + doc.text());
+            Elements results = doc.select(PRODUCT_SELECTOR);
+            log.info("num of results = " + results.size());
 
-            Product product = createProduct(doc, index, category.getId());
-            if (product == null) {
-                continue;
+            for (int i = 0; i < results.size(); i++) {
+                int index = CrawlerUtil.getResultIndex(results.get(i));
+                if (index == -1) {
+                    log.info("Cannot get result index for element: " + results.get(i).toString());
+                    continue;
+                }
+
+                Product product = createProduct(doc, index, category.getId());
+                if (product == null) {
+                    continue;
+                }
+
+                productSource.sendProductToQueue(product);
             }
-
-            productSource.sendProductToQueue(product);
-        }
+        } while (isMorePages);
     }
 
     private Product createProduct(Element doc, int index, long categoryId) throws IOException {
@@ -324,7 +328,7 @@ public class ProductCrawlerTask {
             }
             try {
                 document = Jsoup.connect(productUrl).headers(headers).userAgent(USER_AGENT)
-                        .timeout(TIMEOUT_IN_MILLISECONDS).get();
+                        .timeout(TIMEOUT_IN_MILLISECONDS).maxBodySize(0).get();
             } catch (IOException | IllegalArgumentException e) {
                 log.info("textProxy() failed: index = " + index);
             }

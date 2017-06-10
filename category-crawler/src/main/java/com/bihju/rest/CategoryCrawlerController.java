@@ -21,13 +21,10 @@ public class CategoryCrawlerController {
         return "Success";
     }
 
-    @RequestMapping(value = "categories", method = RequestMethod.GET)
-    public void crawlCategories() {
-        try {
-            categoryCrawlerTask.startCrawling();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @RequestMapping(value = "crawler", method = RequestMethod.GET)
+    public String startCrawler() {
+        categoryCrawlerTask.startCrawling();
+        return "Success";
     }
 
 }

@@ -51,7 +51,7 @@ public class CategoryCrawlerTask {
         Document doc = null;
         try {
             doc = Jsoup.connect(AMAZON_URL).headers(headers).userAgent(USER_AGENT)
-                    .timeout(TIMEOUT_IN_MILLISECONDS).get();
+                    .timeout(TIMEOUT_IN_MILLISECONDS).maxBodySize(0).get();
         } catch (IOException e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -139,8 +139,9 @@ public class CategoryCrawlerTask {
 
     private void initHeaders() {
         headers = new HashMap<>();
-        headers.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-        headers.put("Accept-Encoding", "gzip, deflate, sdch, br");
-        headers.put("Accept-Language", "en-US,en;q=0.8");
+        headers.put("Accept", "text/html,text/plain");
+        headers.put("Accept-Language", "en-us,en");
+        headers.put("Accept-Encoding", "gzip");
+        headers.put("Accept-Charset", "utf-8");
     }
 }
