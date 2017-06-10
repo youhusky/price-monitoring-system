@@ -70,6 +70,4 @@ public class UserServiceApi {
 
         return "Success";
     }
-
-
 }

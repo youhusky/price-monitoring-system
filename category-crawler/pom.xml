@@ -12,7 +12,7 @@
 
     <artifactId>category-crawler</artifactId>
 
-    <name>category-crawler</name>
+    <name>Category Crawler</name>
     <description>Category crawler to find out product list url for each category</description>
 
     <properties>
