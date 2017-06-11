@@ -2,12 +2,12 @@ package com.bihju;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
-@EnableCircuitBreaker
 @SpringBootApplication
-public class UserServiceApp {
+@EnableEurekaServer
+public class EurekaApplication {
     public static void main(String[] args) {
-        SpringApplication.run(UserServiceApp.class, args);
+        SpringApplication.run(EurekaApplication.class, args);
     }
 }

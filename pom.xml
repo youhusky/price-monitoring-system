@@ -25,6 +25,7 @@
         <module>instant-notification-service</module>
         <module>user-service</module>
         <module>deal-search-service</module>
+        <module>platform</module>
     </modules>
 
     <properties>
@@ -45,6 +46,10 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-hystrix</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
