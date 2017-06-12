@@ -49,21 +49,48 @@ public class ProductCrawlerTask {
         initHeaders();
     }
 
-    @Scheduled(cron = "0 0 1-22/4 * * *")   // every 4 hours, starting from 1:00 AM
-    public void startCrawling() {
-        log.info("Start crawling, threadId: " + Thread.currentThread().getId());
+    @Scheduled(cron = "0 0 1-22/3 * * *")   // every 3 hours, starting from 1:00 AM
+    public void startCrawlingHighPriority() {
+        log.info("Start crawling high priority categories, threadId: " + Thread.currentThread().getId());
 
-        List<Category> categoryList = getAllSubscribedCategories();
+        List<Category> categoryList = getCategories(1);
         for (Category category : categoryList) {
             taskExecutor.submit(new ProductCrawlerWorker(category, proxyList, proxyIndex, headers, productSource));
             delayBetweenCrawling();
         }
 
-        log.info("End cralwing, threadId: " + Thread.currentThread().getId());
+        log.info("End cralwing high priority categories, threadId: " + Thread.currentThread().getId());
     }
 
-    private List<Category> getAllSubscribedCategories() {
-        return categoryService.getAllSubscribedCategories();
+    @Scheduled(cron = "0 0 2-14/12 * * *")   // every 12 hours, starting from 2:00 AM
+    public void startCrawlingMediumPriority() {
+        log.info("Start crawling medium priority categories, threadId: " + Thread.currentThread().getId());
+
+        List<Category> categoryList = getCategories(2);
+        for (Category category : categoryList) {
+            taskExecutor.submit(new ProductCrawlerWorker(category, proxyList, proxyIndex, headers, productSource));
+            delayBetweenCrawling();
+        }
+
+        log.info("End crawling medium priority categories, threadId: " + Thread.currentThread().getId());
+    }
+
+    @Scheduled(cron = "0 0 3 * * *")   // every day, starting from 3:00 AM
+    public void startCrawlingLowPriority() {
+        log.info("Start crawling low priority categories, threadId: " + Thread.currentThread().getId());
+
+        List<Category> categoryList = getCategories(3);
+        for (Category category : categoryList) {
+            taskExecutor.submit(new ProductCrawlerWorker(category, proxyList, proxyIndex, headers, productSource));
+            delayBetweenCrawling();
+        }
+
+        log.info("End crawling low priority categories, threadId: " + Thread.currentThread().getId());
+    }
+
+    private List<Category> getCategories(int priority) {
+        // TODO
+        return categoryService.getCategories(priority);
     }
 
     private void delayBetweenCrawling() {

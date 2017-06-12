@@ -37,17 +37,33 @@ public class ProductCrawlerApi {
         return "Success";
     }
 
-    @RequestMapping(value = "crawler", method = RequestMethod.GET)
+    @RequestMapping(value = "products/{priority}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public String startCrawler() {
-        productCrawlerTask.startCrawling();
+    public String startCrawler(@PathVariable int priority) {
+        switch (priority) {
+            case 1:
+                productCrawlerTask.startCrawlingHighPriority();
+                break;
+
+            case 2:
+                productCrawlerTask.startCrawlingMediumPriority();
+                break;
+
+            case 3:
+                productCrawlerTask.startCrawlingLowPriority();
+                break;
+
+            default:
+                return "Invalid parameter: " + priority;
+        }
+
         return "Success";
     }
 
-    @RequestMapping(value = "subscribed-categories", method = RequestMethod.GET)
+    @RequestMapping(value = "categories/{priority}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<Category> getAllSubscribedCategories() {
-        return categoryService.getAllSubscribedCategories();
+    public List<Category> getCategoryByPriority(@PathVariable int priority) {
+        return categoryService.getCategories(priority);
     }
 
 }

@@ -5,5 +5,5 @@ import com.bihju.domain.Category;
 import java.util.List;
 
 public interface CategoryService {
-    List<Category> getAllSubscribedCategories();
+    List<Category> getCategories(int priority);
 }
