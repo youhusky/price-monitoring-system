@@ -17,6 +17,7 @@ public class CategoryPriority {
 
     private long categoryId;
     private int priority;
+    private long userCount;
     private long createTime;
     private long updateTime;
 
@@ -24,9 +25,11 @@ public class CategoryPriority {
     }
 
     @JsonCreator
-    public CategoryPriority(@JsonProperty("category-id") long categoryId,
-                            @JsonProperty("priority") int priority) {
+    public CategoryPriority(@JsonProperty("category_id") long categoryId,
+                            @JsonProperty("priority") int priority,
+                            @JsonProperty("user_count") long userCount) {
         this.categoryId = categoryId;
         this.priority = priority;
+        this.userCount = userCount;
     }
 }

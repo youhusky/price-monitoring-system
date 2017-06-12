@@ -21,14 +21,15 @@ public class CategoryPriorityServiceImpl implements CategoryPriorityService {
     }
 
     @Override
-    public void saveCategoryPriority(long categoryId, int priority) {
+    public void saveCategoryPriority(long categoryId, int priority, long userCount) {
         CategoryPriority categoryPriority = categoryPriorityRepository.findCategoryPriorityByCategoryId(categoryId);
         if (categoryPriority != null) {
             categoryPriority.setPriority(priority);
+            categoryPriority.setUserCount(userCount);
             categoryPriority.setUpdateTime(System.currentTimeMillis());
             categoryPriorityRepository.save(categoryPriority);
         } else {
-            categoryPriority = new CategoryPriority(categoryId, priority);
+            categoryPriority = new CategoryPriority(categoryId, priority, userCount);
             categoryPriority.setCreateTime(System.currentTimeMillis());
             categoryPriority.setUpdateTime(System.currentTimeMillis());
             categoryPriorityRepository.save(categoryPriority);

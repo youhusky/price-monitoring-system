@@ -1,6 +1,5 @@
 package com.bihju;
 
-import com.bihju.domain.Category;
 import com.bihju.service.CategoryPriorityService;
 import com.bihju.service.CategoryService;
 import lombok.extern.log4j.Log4j;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.text.SimpleDateFormat;
@@ -37,6 +37,7 @@ public class CategoryCrawlerTask {
     private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36";
     private static final String CATEGORY_SELECTOR = "#searchDropdownBox > option:nth-child($NUMBER)";
     private static final int TIMEOUT_IN_MILLISECONDS = 100000;
+    private static final int USER_COUNT_THRESHOLD = 1;
     private final String AUTH_USER = "bittiger";
     private final String AUTH_PASSWORD = "cs504";
     private Map<String, String> headers;
@@ -53,10 +54,18 @@ public class CategoryCrawlerTask {
     }
 
     public void updateCategoryPriorities() {
-        List<Category> categories = categoryService.getSortedCategories();
-        int size = categories.size();
+        List<Object[]> results = categoryService.getHighPriorityCategories(USER_COUNT_THRESHOLD);
+        for (Object[] result : results) {
+            categoryPriorityService.saveCategoryPriority(
+                    ((BigInteger) result[0]).longValue(), 1, ((BigInteger) result[1]).longValue());
+        }
+
+        results = categoryService.getSortedCategories(USER_COUNT_THRESHOLD);
+        int size = results.size();
         for (int i = 0; i < size; i++) {
-            categoryPriorityService.saveCategoryPriority(categories.get(i).getId(), i * 3 / size + 1);
+            long userCount = results.get(i)[1] == null ? 0 : ((BigInteger) results.get(i)[1]).longValue();
+            categoryPriorityService.saveCategoryPriority(((BigInteger) results.get(i)[0]).longValue(),
+                    i * 2 / size + 2, userCount);
         }
     }
 

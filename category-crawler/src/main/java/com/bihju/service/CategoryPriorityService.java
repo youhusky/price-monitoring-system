@@ -4,5 +4,5 @@ import com.bihju.domain.CategoryPriority;
 
 public interface CategoryPriorityService {
     CategoryPriority getCategoryPriorityByCategoryId(long categoryId);
-    void saveCategoryPriority(long categoryId, int priority);
+    void saveCategoryPriority(long categoryId, int priority, long userCount);
 }

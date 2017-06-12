@@ -25,8 +25,8 @@ public class Category {
     }
 
     @JsonCreator
-    public Category(@JsonProperty("category-name") String categoryName,
-                    @JsonProperty("product-list-url") String productListUrl) {
+    public Category(@JsonProperty("category_name") String categoryName,
+                    @JsonProperty("product_list_url") String productListUrl) {
         this.categoryName = categoryName;
         this.productListUrl = productListUrl;
     }

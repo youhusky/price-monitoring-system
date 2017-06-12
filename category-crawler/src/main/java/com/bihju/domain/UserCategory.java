@@ -23,7 +23,7 @@ public class UserCategory {
     private long updateTime;
 
     @JsonCreator
-    public UserCategory(@JsonProperty("userId") Long userId, @JsonProperty("categoryId") Long categoryId) {
+    public UserCategory(@JsonProperty("user_id") Long userId, @JsonProperty("category_id") Long categoryId) {
         this.userId = userId;
         this.categoryId = categoryId;
     }

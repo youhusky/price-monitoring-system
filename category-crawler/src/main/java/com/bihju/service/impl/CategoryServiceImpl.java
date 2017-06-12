@@ -33,7 +33,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getSortedCategories() {
-        return categoryRepository.getSortedCategories();
+    public List<Object[]> getHighPriorityCategories(int userCountThreshold) {
+        return categoryRepository.getHighPriorityCategories(userCountThreshold);
+    }
+
+    @Override
+    public List<Object[]> getSortedCategories(int userCountThreshold) {
+        return categoryRepository.getSortedCategories(userCountThreshold);
     }
 }
