@@ -11,6 +11,7 @@ import java.util.List;
 @RepositoryRestResource(path = "categories", collectionResourceRel = "categories")
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("select c from Category c, CategoryPriority cp " +
-            "where c.id = cp.categoryId and cp.priority = :priority")
+            "where c.id = cp.categoryId and cp.priority = :priority " +
+            "order by user_count desc")
     List<Category> getCategories(@Param("priority") int priority);
 }
