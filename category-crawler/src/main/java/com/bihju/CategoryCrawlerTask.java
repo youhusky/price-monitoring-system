@@ -1,12 +1,15 @@
 package com.bihju;
 
+import com.bihju.domain.UserCountThreshold;
 import com.bihju.service.CategoryPriorityService;
 import com.bihju.service.CategoryService;
+import com.bihju.service.UserCountThresholdService;
 import lombok.extern.log4j.Log4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +32,7 @@ public class CategoryCrawlerTask {
 
     private CategoryService categoryService;
     private CategoryPriorityService categoryPriorityService;
+    private UserCountThresholdService userCountThresholdService;
     private List<String> proxyList;
     private int index = 0;
     private static final String AMAZON_URL = "https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias=aps&field-keywords=-12345";
@@ -37,30 +41,45 @@ public class CategoryCrawlerTask {
     private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36";
     private static final String CATEGORY_SELECTOR = "#searchDropdownBox > option:nth-child($NUMBER)";
     private static final int TIMEOUT_IN_MILLISECONDS = 100000;
-    private static final int USER_COUNT_THRESHOLD = 1;
     private final String AUTH_USER = "bittiger";
     private final String AUTH_PASSWORD = "cs504";
     private Map<String, String> headers;
+    @Value("${user_count_threshold}")
+    private long USER_COUNT_THRESHOLD;
+
 
     @Autowired
-    public CategoryCrawlerTask(CategoryService categoryService, CategoryPriorityService categoryPriorityService) {
+    public CategoryCrawlerTask(CategoryService categoryService, CategoryPriorityService categoryPriorityService,
+                               UserCountThresholdService userCountThresholdService) {
         this.categoryService = categoryService;
         this.categoryPriorityService = categoryPriorityService;
+        this.userCountThresholdService = userCountThresholdService;
     }
 
     public void init(String proxyFilePath) {
+        initUserCountThreshold();
         initProxyList(proxyFilePath);
         initHeaders();
     }
 
+    public void initUserCountThreshold() {
+        UserCountThreshold userCountThreshold = userCountThresholdService.getUserCountThreshold();
+        if (userCountThreshold == null) {
+            userCountThreshold = new UserCountThreshold();
+            userCountThreshold.setHighPriorityUserCount(USER_COUNT_THRESHOLD);
+        }
+
+        userCountThresholdService.setUserCountThreshold(userCountThreshold);
+    }
+
     public void updateCategoryPriorities() {
-        List<Object[]> results = categoryService.getHighPriorityCategories(USER_COUNT_THRESHOLD);
+        List<Object[]> results = categoryService.getHighPriorityCategories();
         for (Object[] result : results) {
             categoryPriorityService.saveCategoryPriority(
                     ((BigInteger) result[0]).longValue(), 1, ((BigInteger) result[1]).longValue());
         }
 
-        results = categoryService.getSortedCategories(USER_COUNT_THRESHOLD);
+        results = categoryService.getSortedCategories();
         int size = results.size();
         for (int i = 0; i < size; i++) {
             long userCount = results.get(i)[1] == null ? 0 : ((BigInteger) results.get(i)[1]).longValue();

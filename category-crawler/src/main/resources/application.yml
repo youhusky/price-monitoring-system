@@ -18,3 +18,5 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL5Dialect
     hibernate.ddl-auto: update
+
+user_count_threshold: 1

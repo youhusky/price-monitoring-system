@@ -1,7 +1,10 @@
 package com.bihju.rest;
 
 import com.bihju.CategoryCrawlerTask;
+import com.bihju.domain.UserCountThreshold;
+import com.bihju.service.UserCountThresholdService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,10 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/category-crawler")
 public class CategoryCrawlerController {
     private CategoryCrawlerTask categoryCrawlerTask;
+    private UserCountThresholdService userCountThresholdService;
 
     @Autowired
-    public CategoryCrawlerController(CategoryCrawlerTask categoryCrawlerTask) {
+    public CategoryCrawlerController(CategoryCrawlerTask categoryCrawlerTask, UserCountThresholdService userCountThresholdService) {
         this.categoryCrawlerTask = categoryCrawlerTask;
+        this.userCountThresholdService = userCountThresholdService;
     }
 
     @RequestMapping(value = "test", method = RequestMethod.GET)
@@ -30,6 +35,17 @@ public class CategoryCrawlerController {
     @RequestMapping(value = "priorities", method = RequestMethod.GET)
     public String updatePriority() {
         categoryCrawlerTask.updateCategoryPriorities();
+        return "Success";
+    }
+
+    @RequestMapping(value = "user-count-threshold", method = RequestMethod.GET)
+    public UserCountThreshold getUserCountThreshold() {
+        return userCountThresholdService.getUserCountThreshold();
+    }
+
+    @RequestMapping(value = "user-count-threshold", method = RequestMethod.PUT)
+    public String updateUserCountThreshold(@RequestBody UserCountThreshold userCountThreshold) {
+        userCountThresholdService.setUserCountThreshold(userCountThreshold);
         return "Success";
     }
 }

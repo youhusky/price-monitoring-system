@@ -3,7 +3,6 @@ package com.bihju.repository;
 import com.bihju.domain.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -20,8 +19,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "left join user_category uc " +
             "on uc.category_id = c.id " +
             "group by (uc.category_id) " +
-            "having count(user_id) >= :userCountThreshold", nativeQuery = true)
-    List<Object[]> getHighPriorityCategories(@Param("userCountThreshold") int userCountThreshold);
+            "having count(user_id) >= 1", nativeQuery = true)
+    List<Object[]> getHighPriorityCategories();
 
     @Query(value=
             "select c.id, user_count " +
@@ -33,8 +32,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
                 "group by category_id " +
             ") as ucc " +
             "on ucc.category_id = c.id " +
-            "where user_count < :userCountThreshold or user_count is null "
+            "where user_count < 1 or user_count is null "
             , nativeQuery=true)
-    List<Object[]> getSortedCategories(@Param("userCountThreshold") int userCountThreshold);
+    List<Object[]> getSortedCategories();
 }
 
