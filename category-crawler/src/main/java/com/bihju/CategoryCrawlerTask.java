@@ -1,5 +1,7 @@
 package com.bihju;
 
+import com.bihju.domain.Category;
+import com.bihju.service.CategoryPriorityService;
 import com.bihju.service.CategoryService;
 import lombok.extern.log4j.Log4j;
 import org.jsoup.Jsoup;
@@ -9,11 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Log4j
@@ -21,6 +28,7 @@ public class CategoryCrawlerTask {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     private CategoryService categoryService;
+    private CategoryPriorityService categoryPriorityService;
     private List<String> proxyList;
     private int index = 0;
     private static final String AMAZON_URL = "https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias=aps&field-keywords=-12345";
@@ -34,13 +42,22 @@ public class CategoryCrawlerTask {
     private Map<String, String> headers;
 
     @Autowired
-    public CategoryCrawlerTask(CategoryService categoryService) {
+    public CategoryCrawlerTask(CategoryService categoryService, CategoryPriorityService categoryPriorityService) {
         this.categoryService = categoryService;
+        this.categoryPriorityService = categoryPriorityService;
     }
 
     public void init(String proxyFilePath) {
         initProxyList(proxyFilePath);
         initHeaders();
+    }
+
+    public void updateCategoryPriorities() {
+        List<Category> categories = categoryService.getSortedCategories();
+        int size = categories.size();
+        for (int i = 0; i < size; i++) {
+            categoryPriorityService.saveCategoryPriority(categories.get(i).getId(), i * 3 / size + 1);
+        }
     }
 
     @Scheduled(cron = "0 0 0 * * SUN")   // every Sunday
@@ -84,6 +101,8 @@ public class CategoryCrawlerTask {
         }
 
         log.info("End crawling, threadId: " + Thread.currentThread().getId());
+        updateCategoryPriorities();
+        log.info("Finish category priority setting");
     }
 
     private void initProxyList(String proxyFilePath) {

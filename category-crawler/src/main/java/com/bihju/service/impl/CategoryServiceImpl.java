@@ -6,6 +6,8 @@ import com.bihju.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
@@ -28,5 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
             category.setUpdateTime(System.currentTimeMillis());
             categoryRepository.save(category);
         }
+    }
+
+    @Override
+    public List<Category> getSortedCategories() {
+        return categoryRepository.getSortedCategories();
     }
 }

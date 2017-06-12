@@ -21,10 +21,15 @@ public class CategoryCrawlerController {
         return "Success";
     }
 
-    @RequestMapping(value = "crawler", method = RequestMethod.GET)
+    @RequestMapping(value = "categories", method = RequestMethod.GET)
     public String startCrawler() {
         categoryCrawlerTask.startCrawling();
         return "Success";
     }
 
+    @RequestMapping(value = "priorities", method = RequestMethod.GET)
+    public String updatePriority() {
+        categoryCrawlerTask.updateCategoryPriorities();
+        return "Success";
+    }
 }
