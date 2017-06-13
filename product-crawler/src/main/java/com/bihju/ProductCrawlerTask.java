@@ -76,7 +76,7 @@ public class ProductCrawlerTask {
         List<Category> categoryList = getCategories(PRIORITY_MEDIUM);
         List<String> subProxyList = proxyList.subList(proxyList.size() / 3 + 1, proxyList.size() / 3 * 2);
         for (Category category : categoryList) {
-            taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex2, headers, productSource, PRIORITY_HIGH));
+            taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex2, headers, productSource, PRIORITY_MEDIUM));
             delayBetweenCrawling();
         }
 
@@ -90,7 +90,7 @@ public class ProductCrawlerTask {
         List<Category> categoryList = getCategories(PRIORITY_LOW);
         List<String> subProxyList = proxyList.subList(proxyList.size() / 3 * 2, proxyList.size());
         for (Category category : categoryList) {
-            taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex3, headers, productSource, PRIORITY_HIGH));
+            taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex3, headers, productSource, PRIORITY_LOW));
             delayBetweenCrawling();
         }
 

@@ -39,23 +39,30 @@ public class ProductCrawlerApi {
 
     @RequestMapping(value = "products/{priority}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public String startCrawler(@PathVariable int priority) {
-        switch (priority) {
-            case 1:
-                productCrawlerTask.startCrawlingHighPriority();
-                break;
-
-            case 2:
-                productCrawlerTask.startCrawlingMediumPriority();
-                break;
-
-            case 3:
-                productCrawlerTask.startCrawlingLowPriority();
-                break;
-
-            default:
-                return "Invalid parameter: " + priority;
+    public String startCrawler(@PathVariable final int priority) {
+        if (priority > ProductCrawlerTask.PRIORITY_LOW || priority < 1) {
+            return "Invalid priority.";
         }
+
+        Thread t = new Thread() {
+            public void run() {
+                switch (priority) {
+                    case ProductCrawlerTask.PRIORITY_HIGH:
+                        productCrawlerTask.startCrawlingHighPriority();
+                        return;
+
+                    case ProductCrawlerTask.PRIORITY_MEDIUM:
+                        productCrawlerTask.startCrawlingMediumPriority();
+                        return;
+
+                    case ProductCrawlerTask.PRIORITY_LOW:
+                        productCrawlerTask.startCrawlingLowPriority();
+                        return;
+                }
+            }
+        };
+
+        t.start();
 
         return "Success";
     }

@@ -22,24 +22,38 @@ public class ProductCrawlerWorker implements Runnable {
     private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36";
     private static final String PRODUCT_SELECTOR = "li[data-asin]";
     private static final String[] TITLE_SELECTORS = {
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-small.a-grid-vertical-align.a-grid-center > div > a > span",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div:nth-child(1) > a",
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div.a-row.a-spacing-mini > a > h2"
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div.a-row.a-spacing-mini > a > h2",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div.a-row.a-spacing-micro > a > h2",
+            "#result_$RESULT_NO > div > div:nth-child(3) > div:nth-child(1) > a"
     };
     private static final String[] PRICE_WHOLE_SELECTORS = {
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div:nth-child(2) > a > span > span > span > span",
             "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > span",
-            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > span"
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > span",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div:nth-child(2) > a > span > span > span > span",
+            "#result_$RESULT_NO > div > div:nth-child(4) > a > span.a-color-base.sx-zero-spacing > span > span"
     };
     private static final String[] PRICE_FRACTION_SELECTORS = {
+            "#result_RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div:nth-child(2) > a > span > span > span > sup.sx-price-fractional",
             "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > sup.sx-price-fractional",
-            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > sup.sx-price-fractional"
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > sup.sx-price-fractional",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div:nth-child(2) > a > span > span > span > sup.sx-price-fractional",
+            "#result_RESULT_NO > div > div:nth-child(4) > a > span.a-color-base.sx-zero-spacing > span > sup.sx-price-fractional"
     };
     private static final String[] THUMNAIL_SELECTORS = {
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-base > div > div > a > img",
             "#result_$RESULT_NO > div > div.a-row.a-spacing-base > div > a > img",
-            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-left > div > div > a > img"
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-left > div > div > a > img",
+            "#rot-$PRODUCT_ID > div > a > div.s-card.s-card-group-rot-$PRODUCT_ID.s-active > img"
     };
     private static final String[] DETAIL_URL_SELECTORS = {
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div.a-row.a-spacing-micro > a",
             "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div.a-row.a-spacing-mini > a",
-            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div:nth-child(1) > a"
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div:nth-child(1) > a",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div.a-row.a-spacing-micro > a",
+            "#result_$RESULT_NO > div > div:nth-child(3) > div:nth-child(1) > a"
     };
     private static final int TIMEOUT_IN_MILLISECONDS = 100000;
     private Map<String, String> headers;
@@ -105,10 +119,6 @@ public class ProductCrawlerWorker implements Runnable {
             return null;
         }
 
-        if (!updateThumnail(product, doc, index)) {
-            return null;
-        }
-
         if (!updatePrice(product, doc, index)) {
             return null;
         }
@@ -118,6 +128,10 @@ public class ProductCrawlerWorker implements Runnable {
         }
 
         if (!updateProductId(product, doc, index)) {
+            return null;
+        }
+
+        if (!updateThumnail(product, doc, index)) {
             return null;
         }
 
@@ -142,7 +156,8 @@ public class ProductCrawlerWorker implements Runnable {
 
     private boolean updateThumnail(Product product, Element doc, int index) throws IOException {
         for (String thumnailSelector : THUMNAIL_SELECTORS) {
-            String selector = thumnailSelector.replace("$RESULT_NO", String.valueOf(index));
+            String selector = thumnailSelector.replace("$RESULT_NO", String.valueOf(index))
+                    .replace("$PRODUCT_ID", product.getProductId());
             Element element = doc.select(selector).first();
             if (element != null) {
                 log.info("thumnail = " + element.attr("src") + ", threadId = " + Thread.currentThread().getId());
@@ -174,7 +189,7 @@ public class ProductCrawlerWorker implements Runnable {
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     log.info("Cannot parse price whole value for product index: " + index + ", threadId = " + Thread.currentThread().getId());
-                    return false;
+                    continue;
                 }
 
                 break;
@@ -196,7 +211,7 @@ public class ProductCrawlerWorker implements Runnable {
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     log.info("Cannot parse price fraction value for product index: " + index + ", threadId = " + Thread.currentThread().getId());
-                    return false;
+                    continue;
                 }
 
                 break;
