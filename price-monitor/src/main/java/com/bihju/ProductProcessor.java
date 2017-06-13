@@ -23,7 +23,11 @@ public class ProductProcessor {
     @Autowired
     private ProductService productService;
     @Autowired
-    private MessageChannel output;
+    private MessageChannel output1;
+    @Autowired
+    private MessageChannel output2;
+    @Autowired
+    private MessageChannel output3;
 
     private StringRedisTemplate template;
     private ValueOperations<String, String> ops;
@@ -50,7 +54,7 @@ public class ProductProcessor {
                 productService.updateProduct(product);
             }
             if (oldPrice > newPrice) {
-                output.send(MessageBuilder.withPayload(product).build());
+                output1.send(MessageBuilder.withPayload(product).build());
             }
         }
     }
@@ -71,7 +75,7 @@ public class ProductProcessor {
                 productService.updateProduct(product);
             }
             if (oldPrice > newPrice) {
-                output.send(MessageBuilder.withPayload(product).build());
+                output2.send(MessageBuilder.withPayload(product).build());
             }
         }
     }
@@ -92,7 +96,7 @@ public class ProductProcessor {
                 productService.updateProduct(product);
             }
             if (oldPrice > newPrice) {
-                output.send(MessageBuilder.withPayload(product).build());
+                output3.send(MessageBuilder.withPayload(product).build());
             }
         }
     }

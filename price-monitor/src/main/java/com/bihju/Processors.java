@@ -9,7 +9,9 @@ public interface Processors {
     String INPUT1 = "input1";
     String INPUT2 = "input2";
     String INPUT3 = "input3";
-    String OUTPUT = "output";
+    String OUTPUT1 = "output1";
+    String OUTPUT2 = "output2";
+    String OUTPUT3 = "output3";
 
     @Input(Processors.INPUT1)
     SubscribableChannel input1();
@@ -20,6 +22,12 @@ public interface Processors {
     @Input(Processors.INPUT3)
     SubscribableChannel input3();
 
-    @Output(Processors.OUTPUT)
-    MessageChannel output();
+    @Output(Processors.OUTPUT1)
+    MessageChannel output1();
+
+    @Output(Processors.OUTPUT2)
+    MessageChannel output2();
+
+    @Output(Processors.OUTPUT3)
+    MessageChannel output3();
 }

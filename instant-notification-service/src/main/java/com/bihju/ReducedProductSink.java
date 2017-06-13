@@ -31,14 +31,36 @@ public class ReducedProductSink {
         this.mailUtil = mailUtil;
     }
 
-    @ServiceActivator(inputChannel = Sinks.INPUT)
-    public void processProducts(Product product) throws Exception {
-        log.info("Product received, productId = " + product.getProductId() + ", categoryId = " + product.getCategoryId());
-        long categoryId = product.getCategoryId();
-        List<String> emails = userService.findUsersByCategoryId(categoryId);
-        if (!emails.isEmpty()) {
-            sendNotification(emails.toArray(new String[0]), product);
-        }
+    @ServiceActivator(inputChannel = Sinks.INPUT1)
+    public void processProductsHigh(Product product) throws Exception {
+        log.info("Product received from high priority queue, productId = " + product.getProductId() + ", categoryId = " + product.getCategoryId());
+        sendNotificationToSubscribers(product);
+    }
+
+    @ServiceActivator(inputChannel = Sinks.INPUT2)
+    public void processProductsMedium(Product product) throws Exception {
+        log.info("Product received from medium priority queue, productId = " + product.getProductId() + ", categoryId = " + product.getCategoryId());
+        sendNotificationToSubscribers(product);
+    }
+
+    @ServiceActivator(inputChannel = Sinks.INPUT3)
+    public void processProductsLow(Product product) throws Exception {
+        log.info("Product received from low priority queue, productId = " + product.getProductId() + ", categoryId = " + product.getCategoryId());
+        sendNotificationToSubscribers(product);
+    }
+
+    private void sendNotificationToSubscribers(final Product product) {
+        Thread thread = new Thread() {
+            public void run() {
+                long categoryId = product.getCategoryId();
+                List<String> emails = userService.findUsersByCategoryId(categoryId);
+                if (!emails.isEmpty()) {
+                    sendNotification(emails.toArray(new String[0]), product);
+                }
+            }
+        };
+
+        thread.start();
     }
 
     private void sendNotification(String[] emails, Product product) {

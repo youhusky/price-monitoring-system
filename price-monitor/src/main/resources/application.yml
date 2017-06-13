@@ -18,8 +18,14 @@ spring:
           group: default
           destination: q_product_p3
           durableSubscription: true
-        output:
-          destination: q_discount_product
+        output1:
+          destination: q_discount_product_p1
+          durableSubscription: true
+        output2:
+          destination: q_discount_product_p2
+          durableSubscription: true
+        output3:
+          destination: q_discount_product_p3
           durableSubscription: true
 
   datasource:

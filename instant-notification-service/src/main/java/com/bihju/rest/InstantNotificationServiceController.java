@@ -16,7 +16,6 @@ public class InstantNotificationServiceController {
         this.reducedProductSink = reducedProductSink;
     }
 
-
     @RequestMapping(value = "test", method = RequestMethod.GET)
     public String test() {
         return "Success";
@@ -26,7 +25,7 @@ public class InstantNotificationServiceController {
     @ResponseStatus(HttpStatus.OK)
     public String sendMail(@RequestBody Product product) {
         try {
-            reducedProductSink.processProducts(product);
+            reducedProductSink.processProductsHigh(product);
             return "Success";
         } catch (Exception e) {
             e.printStackTrace();
