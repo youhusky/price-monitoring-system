@@ -7,8 +7,8 @@ import org.springframework.messaging.SubscribableChannel;
 
 public interface Processors {
     String INPUT1 = "input1";
-    String INPUT2 = "input1";
-    String INPUT3 = "input1";
+    String INPUT2 = "input2";
+    String INPUT3 = "input3";
     String OUTPUT = "output";
 
     @Input(Processors.INPUT1)
