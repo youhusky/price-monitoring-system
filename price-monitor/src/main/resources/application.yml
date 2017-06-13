@@ -7,12 +7,15 @@ spring:
     stream:
       bindings:
         input1:
+          group: default
           destination: q_product_p1
           durableSubscription: true
         input2:
+          group: default
           destination: q_product_p2
           durableSubscription: true
         input3:
+          group: default
           destination: q_product_p3
           durableSubscription: true
         output:

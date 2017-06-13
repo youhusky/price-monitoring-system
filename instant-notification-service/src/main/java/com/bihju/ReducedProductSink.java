@@ -7,14 +7,13 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 
 import java.util.List;
 
 @MessageEndpoint
-@EnableBinding(Sink.class)
+@EnableBinding(Sinks.class)
 @Log4j
 public class ReducedProductSink {
     private final static String MAIL_SUBJECT = "Your Instant Deal Alert";
@@ -32,7 +31,7 @@ public class ReducedProductSink {
         this.mailUtil = mailUtil;
     }
 
-    @ServiceActivator(inputChannel = Sink.INPUT)
+    @ServiceActivator(inputChannel = Sinks.INPUT)
     public void processProducts(Product product) throws Exception {
         log.info("Product received, productId = " + product.getProductId() + ", categoryId = " + product.getCategoryId());
         long categoryId = product.getCategoryId();

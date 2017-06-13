@@ -10,10 +10,10 @@ spring:
           group: default
           destination: q_discount_product
           durableSubscription: true
-        output:
-          group: default
-          destination: q_discount_product_error
-          durableSubscription: true
+#        output:
+#          group: default
+#          destination: q_discount_product_error
+#          durableSubscription: true
 
   mail:
     host: smtp.gmail.com
