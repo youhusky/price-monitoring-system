@@ -15,9 +15,13 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 
 @MessageEndpoint
-@EnableBinding(Processor.class)
+@EnableBinding(Processors.class)
 @Log4j
 public class ProductProcessor {
+    public final static int PRIORITY_HIGH = 1;
+    public final static int PRIORITY_MEDIUM = 2;
+    public final static int PRIORITY_LOW = 3;
+
     @Autowired
     private ProductService productService;
     @Autowired
@@ -32,9 +36,51 @@ public class ProductProcessor {
         ops = this.template.opsForValue();
     }
 
-    @ServiceActivator(inputChannel = Sink.INPUT)
-    public void checkProduct(Product product) throws Exception {
-        log.info("Product received, productId = " + product.getProductId());
+    @ServiceActivator(inputChannel = Processors.INPUT1)
+    public void checkProductHigh(Product product) throws Exception {
+        log.info("Product received on channel 1, productId = " + product.getProductId());
+
+        if (!isProductExist(product)) {
+            cacheProduct(product);
+            productService.createProduct(product);
+        } else {
+            double oldPrice = getOldPrice(product);
+            double newPrice = product.getPrice();
+
+            if (oldPrice != newPrice) {
+                updateCache(product);
+                productService.updateProduct(product);
+            }
+            if (oldPrice > newPrice) {
+                output.send(MessageBuilder.withPayload(product).build());
+            }
+        }
+    }
+
+    @ServiceActivator(inputChannel = Processors.INPUT2)
+    public void checkProductMedium(Product product) throws Exception {
+        log.info("Product received on channel 2, productId = " + product.getProductId());
+
+        if (!isProductExist(product)) {
+            cacheProduct(product);
+            productService.createProduct(product);
+        } else {
+            double oldPrice = getOldPrice(product);
+            double newPrice = product.getPrice();
+
+            if (oldPrice != newPrice) {
+                updateCache(product);
+                productService.updateProduct(product);
+            }
+            if (oldPrice > newPrice) {
+                output.send(MessageBuilder.withPayload(product).build());
+            }
+        }
+    }
+
+    @ServiceActivator(inputChannel = Processors.INPUT3)
+    public void checkProductLow(Product product) throws Exception {
+        log.info("Product received on channel 3, productId = " + product.getProductId());
 
         if (!isProductExist(product)) {
             cacheProduct(product);

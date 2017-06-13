@@ -5,10 +5,7 @@ import com.bihju.domain.Product;
 import com.bihju.service.ProductService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/price-monitor")
@@ -24,14 +21,26 @@ public class PriceMonitorApi {
         return "Success";
     }
 
-    @RequestMapping(value = "products", method = RequestMethod.POST)
-    public Product parseProduct(@RequestBody Product product) {
+    @RequestMapping(value = "products/{priority}", method = RequestMethod.POST)
+    public Product parseProduct(@PathVariable int priority, @RequestBody Product product) {
         try {
-            productProcessor.checkProduct(product);
-            return productService.getProduct(product.getProductId());
+            switch (priority) {
+                case ProductProcessor.PRIORITY_HIGH:
+                    productProcessor.checkProductHigh(product);
+                    return productService.getProduct(product.getProductId());
+
+                case ProductProcessor.PRIORITY_MEDIUM:
+                    productProcessor.checkProductMedium(product);
+                    return productService.getProduct(product.getProductId());
+
+                case ProductProcessor.PRIORITY_LOW:
+                    productProcessor.checkProductLow(product);
+                    return productService.getProduct(product.getProductId());
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+
+        return null;
     }
 }
