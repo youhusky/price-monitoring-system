@@ -47,15 +47,17 @@ public class ProductCrawlerWorker implements Runnable {
     private List<String> proxyList;
     private AtomicInteger proxyIndex;
     private ProductSource productSource;
+    private int priority;
 
     @Autowired
     public ProductCrawlerWorker(Category category, List<String> proxyList, AtomicInteger proxyIndex, Map<String,
-            String> headers, ProductSource productSource) {
+            String> headers, ProductSource productSource, int priority) {
         this.category = category;
         this.proxyList = proxyList;
         this. proxyIndex = proxyIndex;
         this.headers = headers;
         this.productSource = productSource;
+        this.priority = priority;
     }
 
     @Override
@@ -87,7 +89,7 @@ public class ProductCrawlerWorker implements Runnable {
                     if (product == null) {
                         continue;
                     }
-                    productSource.sendProductToQueue(product);
+                    productSource.sendProductToQueue(product, priority);
                 } catch (IOException e) {
                     log.warn("Failed to crawl product list url: " + productListUrl + ", threadId = " + Thread.currentThread().getId());
                 }

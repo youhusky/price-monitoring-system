@@ -8,11 +8,11 @@ spring:
       bindings:
         input:
           group: default
-          destination: products
+          destination: q_product
           durableSubscription: true
         output:
           group: default
-          destination: reduced-products
+          destination: q_discount_product
           durableSubscription: true
 
   datasource:

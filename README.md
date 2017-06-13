@@ -1,4 +1,4 @@
-# Develop an Amazon Price Monitoring System
+# Develop a Price Monitoring System
 Design a price monitoring system to monitor product price and notify subscribers if the price is reduced. Similar to Dealmoon.com.
 
 ## Features

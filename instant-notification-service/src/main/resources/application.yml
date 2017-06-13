@@ -8,7 +8,11 @@ spring:
       bindings:
         input:
           group: default
-          destination: reduced-products
+          destination: q_discount_product
+          durableSubscription: true
+        output:
+          group: default
+          destination: q_discount_product_error
           durableSubscription: true
 
   mail:

@@ -30,10 +30,10 @@ public class ProductCrawlerApi {
         return "Success";
     }
 
-    @RequestMapping(value = "products", method = RequestMethod.POST)
+    @RequestMapping(value = "products/{priority}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public String sendProduct(@RequestBody Product product) {
-        productSource.sendProductToQueue(product);
+    public String sendProduct(@PathVariable int priority, @RequestBody Product product) {
+        productSource.sendProductToQueue(product, priority);
         return "Success";
     }
 

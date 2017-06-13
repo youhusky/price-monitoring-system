@@ -29,12 +29,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 @Log4j
 public class ProductCrawlerTask {
+    public final static int PRIORITY_HIGH = 1;
+    public final static int PRIORITY_MEDIUM = 2;
+    public final static int PRIORITY_LOW = 3;
+
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    private final static String AUTH_USER = "bittiger";
+    private final static String AUTH_PASSWORD = "cs504";
 
     private List<String> proxyList;
-    private AtomicInteger proxyIndex = new AtomicInteger(0);
-    private final String AUTH_USER = "bittiger";
-    private final String AUTH_PASSWORD = "cs504";
+    private AtomicInteger proxyIndex1 = new AtomicInteger(0);
+    private AtomicInteger proxyIndex2 = new AtomicInteger(0);
+    private AtomicInteger proxyIndex3 = new AtomicInteger(0);
     private Map<String, String> headers;
 
     @Autowired
@@ -53,22 +59,24 @@ public class ProductCrawlerTask {
     public void startCrawlingHighPriority() {
         log.info("Start crawling high priority categories, threadId: " + Thread.currentThread().getId());
 
-        List<Category> categoryList = getCategories(1);
+        List<Category> categoryList = getCategories(PRIORITY_HIGH);
+        List<String> subProxyList = proxyList.subList(0, proxyList.size() / 3);
         for (Category category : categoryList) {
-            taskExecutor.submit(new ProductCrawlerWorker(category, proxyList, proxyIndex, headers, productSource));
+            taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex1, headers, productSource, PRIORITY_HIGH));
             delayBetweenCrawling();
         }
 
-        log.info("End cralwing high priority categories, threadId: " + Thread.currentThread().getId());
+        log.info("End crawling high priority categories, threadId: " + Thread.currentThread().getId());
     }
 
     @Scheduled(cron = "0 0 2-14/12 * * *")   // every 12 hours, starting from 2:00 AM
     public void startCrawlingMediumPriority() {
         log.info("Start crawling medium priority categories, threadId: " + Thread.currentThread().getId());
 
-        List<Category> categoryList = getCategories(2);
+        List<Category> categoryList = getCategories(PRIORITY_MEDIUM);
+        List<String> subProxyList = proxyList.subList(proxyList.size() / 3 + 1, proxyList.size() / 3 * 2);
         for (Category category : categoryList) {
-            taskExecutor.submit(new ProductCrawlerWorker(category, proxyList, proxyIndex, headers, productSource));
+            taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex2, headers, productSource, PRIORITY_HIGH));
             delayBetweenCrawling();
         }
 
@@ -79,9 +87,10 @@ public class ProductCrawlerTask {
     public void startCrawlingLowPriority() {
         log.info("Start crawling low priority categories, threadId: " + Thread.currentThread().getId());
 
-        List<Category> categoryList = getCategories(3);
+        List<Category> categoryList = getCategories(PRIORITY_LOW);
+        List<String> subProxyList = proxyList.subList(proxyList.size() / 3 * 2, proxyList.size());
         for (Category category : categoryList) {
-            taskExecutor.submit(new ProductCrawlerWorker(category, proxyList, proxyIndex, headers, productSource));
+            taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex3, headers, productSource, PRIORITY_HIGH));
             delayBetweenCrawling();
         }
 
@@ -89,7 +98,6 @@ public class ProductCrawlerTask {
     }
 
     private List<Category> getCategories(int priority) {
-        // TODO
         return categoryService.getCategories(priority);
     }
 

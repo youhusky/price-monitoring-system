@@ -6,9 +6,18 @@ spring:
   cloud:
     stream:
       bindings:
-        output:
-          group: default
-          destination: products
+#        output:
+#          group: default
+#          destination: q_product
+#          durableSubscription: true
+        output1:
+          destination: q_product_p1
+          durableSubscription: true
+        output2:
+          destination: q_product_p2
+          durableSubscription: true
+        output3:
+          destination: q_product_p3
           durableSubscription: true
 
   datasource:
