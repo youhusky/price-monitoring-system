@@ -3,7 +3,7 @@ package com.bihju.rest;
 import com.bihju.ProductCrawlerTask;
 import com.bihju.domain.Category;
 import com.bihju.domain.Product;
-import com.bihju.queue.ProductLog;
+import com.bihju.domain.ProductLog;
 import com.bihju.queue.ProductSource;
 import com.bihju.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;

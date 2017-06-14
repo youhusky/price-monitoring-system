@@ -2,7 +2,7 @@ package com.bihju;
 
 import com.bihju.domain.Category;
 import com.bihju.domain.Product;
-import com.bihju.queue.ProductLog;
+import com.bihju.domain.ProductLog;
 import com.bihju.queue.ProductSource;
 import com.bihju.util.CrawlerUtil;
 import lombok.Data;
@@ -84,25 +84,23 @@ public class ProductCrawlerWorker implements Runnable {
         boolean isMorePages = true;
         do {
             String productListUrl = category.getProductListUrl().replace("$PAGE_NO", String.valueOf(pageNum++));
-            productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName,
+            productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName,
                     productListUrl, pageNum, "Successful get product url."));
             Document doc = getDocument(productListUrl, proxyList, categoryName, productListUrl, pageNum);
             if (doc == null) {
-                productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.FAIL, categoryName, productListUrl, pageNum,
+                productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
                 "Failed to retrieve document from productUrl"));
                 isMorePages = false;
                 return;
             }
             Elements results = doc.select(PRODUCT_SELECTOR);
-            productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName, productListUrl, pageNum,
-                    "doc = " + doc.text()));
-            productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName, productListUrl, pageNum,
-                    "num of results = " + results.size()));
+            productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
+                    "Successfully retrieved list, num of results = " + results.size()));
 
             for (int i = 0; i < results.size(); i++) {
                 int index = CrawlerUtil.getResultIndex(results.get(i));
                 if (index == -1) {
-                    productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.FAIL, categoryName, productListUrl, pageNum,
+                    productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
                         "Cannot get result index for element: " + results.get(i).toString()));
                     continue;
                 }
@@ -114,7 +112,7 @@ public class ProductCrawlerWorker implements Runnable {
                     }
                     productSource.sendProductToQueue(product, priority);
                 } catch (IOException e) {
-                    productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.FAIL, categoryName, productListUrl, pageNum,
+                    productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
                     "Failed to crawl product list url: " + productListUrl));
                 }
 
@@ -155,14 +153,14 @@ public class ProductCrawlerWorker implements Runnable {
             String selector = titleSelector.replace("$RESULT_NO", String.valueOf(index));
             Element element = doc.select(selector).first();
             if (element != null) {
-                productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName, productListUrl, pageNum,
+                productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
                 "title = " + element.text() + ", index = " + index));
                 product.setTitle(element.text());
                 return true;
             }
         }
 
-        productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.FAIL, categoryName, productListUrl, pageNum,
+        productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
                 "Cannot parse title for product, index = " + index));
         return false;
     }
@@ -173,14 +171,14 @@ public class ProductCrawlerWorker implements Runnable {
                     .replace("$PRODUCT_ID", product.getProductId());
             Element element = doc.select(selector).first();
             if (element != null) {
-                productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName, productListUrl, pageNum,
+                productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
                         "thumnail = " + element.attr("src") + ", index = " + index));
                 product.setThumnail(element.attr("src"));
                 return true;
             }
         }
 
-        productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName, productListUrl, pageNum,
+        productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
                 "Cannot parse thumnail for product, index = " + index));
         return false;
     }
@@ -192,7 +190,7 @@ public class ProductCrawlerWorker implements Runnable {
             String wholeSelector = priceWholeSelector.replace("$RESULT_NO", String.valueOf(index));
             Element wholeElement = doc.select(wholeSelector).first();
             if (wholeElement != null) {
-                productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName, productListUrl, pageNum,
+                productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
                 "whole price = " + wholeElement.text() + ", index = " + index));
                 String wholePrice = wholeElement.text();
                 if (wholePrice.contains(",")) {
@@ -203,7 +201,7 @@ public class ProductCrawlerWorker implements Runnable {
                     product.setPrice(Double.parseDouble(wholePrice));
                     isWholePriceValid = true;
                 } catch (NumberFormatException e) {
-                    productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.FAIL, categoryName, productListUrl, pageNum,
+                    productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
                     "Cannot parse price whole value for product index: " + index));
                     continue;
                 }
@@ -222,11 +220,11 @@ public class ProductCrawlerWorker implements Runnable {
             Element fractionElement = doc.select(fractionSelector).first();
             if (fractionElement != null) {
                 try {
-                    productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName, productListUrl, pageNum,
+                    productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
                     "fraction price = " + fractionElement.text() + ", index = " + index));
                     product.setPrice(product.getPrice() + Double.parseDouble(fractionElement.text()) / 100.0);
                 } catch (NumberFormatException e) {
-                    productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.FAIL, categoryName, productListUrl, pageNum,
+                    productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
                     "Cannot parse price fraction value for product index: " + index));
                     continue;
                 }
@@ -246,17 +244,17 @@ public class ProductCrawlerWorker implements Runnable {
             Element element = doc.select(selector).first();
             if (element != null) {
                 String detailUrl = element.attr("href");
-                productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName, productListUrl, pageNum,
+                productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
                 "detailUrl = " + detailUrl + ", index = " + index));
                 String normalizedUrl = normalizeUrl(detailUrl, categoryName, productListUrl, pageNum);
-                productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName, productListUrl, pageNum,
+                productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
                 "normalized detailUrl = " + normalizedUrl + ", index = " + index));
                 product.setDetailUrl(normalizedUrl);
                 return true;
             }
         }
 
-        productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName, productListUrl, pageNum,
+        productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
         "Cannot parse detailUrl for product, index = " + index));
         return false;
     }
@@ -271,7 +269,7 @@ public class ProductCrawlerWorker implements Runnable {
         String normalizedUrl = i == -1 ? url : url.substring(0, i - 1);
 
         if (normalizedUrl == null || normalizedUrl.trim().isEmpty()) {
-            productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.FAIL, categoryName, productListUrl, pageNum,
+            productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
                     "Empty url: " + url));
         }
 
@@ -282,7 +280,7 @@ public class ProductCrawlerWorker implements Runnable {
         String detailUrl = product.getDetailUrl();
         int productIdIndex = detailUrl.lastIndexOf('/');
         if (productIdIndex == -1) {
-            productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.FAIL, categoryName, productListUrl, pageNum,
+            productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
                     "Failed to get productId, index: " + index));
             return false;
         }
@@ -307,7 +305,7 @@ public class ProductCrawlerWorker implements Runnable {
         do {
             retryCount--;
             String proxy = proxyList.get(proxyIndex.get());
-            productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.SUCCESS, categoryName, productUrl, pageNum,
+            productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productUrl, pageNum,
                     "proxy = " + proxy));
             System.setProperty("socksProxyHost", proxy); // set proxy server
             if (proxyIndex.get() == proxyList.size() - 1) {
@@ -319,7 +317,7 @@ public class ProductCrawlerWorker implements Runnable {
                 document = Jsoup.connect(productUrl).headers(headers).userAgent(USER_AGENT)
                         .timeout(TIMEOUT_IN_MILLISECONDS).maxBodySize(0).get();
             } catch (IOException | IllegalArgumentException e) {
-                productSource.sendLogToQueue(new ProductLog(ProductLog.STATUS.FAIL, categoryName, productUrl, pageNum,
+                productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productUrl, pageNum,
                 "Test proxy failed: proxyIndex = " + proxyIndex.get()));
             }
         } while (document == null && retryCount > 0);

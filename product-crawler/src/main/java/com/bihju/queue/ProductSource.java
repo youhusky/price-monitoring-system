@@ -2,6 +2,7 @@ package com.bihju.queue;
 
 import com.bihju.ProductCrawlerTask;
 import com.bihju.domain.Product;
+import com.bihju.domain.ProductLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.messaging.MessageChannel;
