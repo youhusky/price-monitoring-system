@@ -1,0 +1,1 @@
+java -jar -Dserver.port=$1 product-log-service/target/product-log-service-1.0.0.BUILD-SNAPSHOT.jar

@@ -1,0 +1,1 @@
+java -jar -Dserver.port=$1 instant-notification-service/target/instant-notification-service-1.0.0.BUILD-SNAPSHOT.jar

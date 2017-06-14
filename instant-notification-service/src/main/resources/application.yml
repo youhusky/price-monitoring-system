@@ -18,10 +18,6 @@ spring:
           group: default
           destination: q_discount_product_p3
           durableSubscription: true
-#        output:
-#          group: default
-#          destination: q_discount_product_error
-#          durableSubscription: true
 
   mail:
     host: smtp.gmail.com
