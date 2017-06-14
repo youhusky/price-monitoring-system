@@ -1,14 +1,9 @@
 package com.bihju;
 
 import com.bihju.domain.Category;
-import com.bihju.domain.Product;
+import com.bihju.queue.ProductSource;
 import com.bihju.service.CategoryService;
-import com.bihju.util.CrawlerUtil;
 import lombok.extern.log4j.Log4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -124,13 +119,13 @@ public class ProductCrawlerTask {
         }
 
         Authenticator.setDefault(
-                new Authenticator() {
-                    @Override
-                    public PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(
-                                AUTH_USER, AUTH_PASSWORD.toCharArray());
-                    }
+            new Authenticator() {
+                @Override
+                public PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(
+                    AUTH_USER, AUTH_PASSWORD.toCharArray());
                 }
+            }
         );
 
         System.setProperty("http.proxyUser", AUTH_USER);

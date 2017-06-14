@@ -7,16 +7,16 @@ spring:
     stream:
       bindings:
         output1:
-          group: default
           destination: q_product_p1
           durableSubscription: true
         output2:
-          group: default
           destination: q_product_p2
           durableSubscription: true
         output3:
-          group: default
           destination: q_product_p3
+          durableSubscription: true
+        log:
+          destination: q_product_log
           durableSubscription: true
 
   datasource:

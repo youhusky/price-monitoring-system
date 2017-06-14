@@ -1,9 +1,10 @@
 package com.bihju.rest;
 
 import com.bihju.ProductCrawlerTask;
-import com.bihju.ProductSource;
 import com.bihju.domain.Category;
 import com.bihju.domain.Product;
+import com.bihju.queue.ProductLog;
+import com.bihju.queue.ProductSource;
 import com.bihju.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,13 @@ public class ProductCrawlerApi {
     @ResponseStatus(HttpStatus.OK)
     public String sendProduct(@PathVariable int priority, @RequestBody Product product) {
         productSource.sendProductToQueue(product, priority);
+        return "Success";
+    }
+
+    @RequestMapping(value = "products/log", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public String sendLog(@RequestBody ProductLog productLog) {
+        productSource.sendLogToQueue(productLog);
         return "Success";
     }
 
@@ -72,5 +80,4 @@ public class ProductCrawlerApi {
     public List<Category> getCategoryByPriority(@PathVariable int priority) {
         return categoryService.getCategories(priority);
     }
-
 }
