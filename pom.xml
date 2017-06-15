@@ -24,7 +24,6 @@
         <module>price-monitor</module>
         <module>instant-notification-service</module>
         <module>user-service</module>
-        <module>deal-search-service</module>
         <module>product-log-service</module>
         <module>platform</module>
     </modules>
