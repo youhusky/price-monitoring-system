@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/product-crawler")
+@RequestMapping("product-crawlers")
 public class ProductCrawlerApi {
     private ProductSource productSource;
     private ProductCrawlerTask productCrawlerTask;
@@ -26,9 +26,9 @@ public class ProductCrawlerApi {
         this.categoryService = categoryService;
     }
 
-    @RequestMapping(value = "test", method = RequestMethod.GET)
-    public String test() {
-        return "Success";
+    @RequestMapping(value = "version", method = RequestMethod.GET)
+    public String getVersion() {
+        return "1.0.0";
     }
 
     @RequestMapping(value = "products/{priority}", method = RequestMethod.POST)

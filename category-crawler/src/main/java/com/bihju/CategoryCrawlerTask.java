@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -24,37 +25,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 @Log4j
 public class CategoryCrawlerTask {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-    private CategoryService categoryService;
-    private CategoryPriorityService categoryPriorityService;
-    private UserCountThresholdService userCountThresholdService;
-    private List<String> proxyList;
-    private int index = 0;
     private static final String AMAZON_URL = "https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias=aps&field-keywords=-12345";
     private static final String PRODUCT_LIST_URL = "https://www.amazon.com/s/ref=nb_sb_noss?url=$SEARCH_ALIAS&field-keywords=-12345&page=$PAGE_NO";
     private static final String WHAT_IS_MY_IP_ADDRESS = "https://whatismyipaddress.com";
     private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36";
     private static final String CATEGORY_SELECTOR = "#searchDropdownBox > option:nth-child($NUMBER)";
     private static final int TIMEOUT_IN_MILLISECONDS = 100000;
-    private final String AUTH_USER = "bittiger";
-    private final String AUTH_PASSWORD = "cs504";
-    private Map<String, String> headers;
-    @Value("${user_count_threshold}")
-    private long USER_COUNT_THRESHOLD;
+    private static final String AUTH_USER = "bittiger";
+    private static final String AUTH_PASSWORD = "cs504";
 
+    private List<String> proxyList;
+    private AtomicInteger proxyIndex = new AtomicInteger(0);
+    private Map<String, String> headers;
 
     @Autowired
-    public CategoryCrawlerTask(CategoryService categoryService, CategoryPriorityService categoryPriorityService,
-                               UserCountThresholdService userCountThresholdService) {
-        this.categoryService = categoryService;
-        this.categoryPriorityService = categoryPriorityService;
-        this.userCountThresholdService = userCountThresholdService;
-    }
+    private CategoryService categoryService;
+    @Autowired
+    private CategoryPriorityService categoryPriorityService;
+    @Autowired
+    private UserCountThresholdService userCountThresholdService;
+
+    @Value("${user_count_threshold}")
+    private long USER_COUNT_THRESHOLD;
 
     public void init(String proxyFilePath) {
         initUserCountThreshold();
@@ -72,23 +70,8 @@ public class CategoryCrawlerTask {
         userCountThresholdService.setUserCountThreshold(userCountThreshold);
     }
 
-    public void updateCategoryPriorities() {
-        List<Object[]> results = categoryService.getHighPriorityCategories();
-        for (Object[] result : results) {
-            categoryPriorityService.saveCategoryPriority(
-                    ((BigInteger) result[0]).longValue(), 1, ((BigInteger) result[1]).longValue());
-        }
-
-        results = categoryService.getSortedCategories();
-        int size = results.size();
-        for (int i = 0; i < size; i++) {
-            long userCount = results.get(i)[1] == null ? 0 : ((BigInteger) results.get(i)[1]).longValue();
-            categoryPriorityService.saveCategoryPriority(((BigInteger) results.get(i)[0]).longValue(),
-                    i * 2 / size + 2, userCount);
-        }
-    }
-
     @Scheduled(cron = "0 0 0 * * SUN")   // every Sunday
+    @Async
     public void startCrawling() {
         log.info("Start crawling, threadId: " + Thread.currentThread().getId());
 
@@ -133,6 +116,22 @@ public class CategoryCrawlerTask {
         log.info("Finish category priority setting");
     }
 
+    public void updateCategoryPriorities() {
+        List<Object[]> results = categoryService.getHighPriorityCategories();
+        for (Object[] result : results) {
+            categoryPriorityService.saveCategoryPriority(
+                    ((BigInteger) result[0]).longValue(), 1, ((BigInteger) result[1]).longValue());
+        }
+
+        results = categoryService.getSortedCategories();
+        int size = results.size();
+        for (int i = 0; i < size; i++) {
+            long userCount = results.get(i)[1] == null ? 0 : ((BigInteger) results.get(i)[1]).longValue();
+            categoryPriorityService.saveCategoryPriority(((BigInteger) results.get(i)[0]).longValue(),
+                    i * 2 / size + 2, userCount);
+        }
+    }
+
     private void initProxyList(String proxyFilePath) {
         proxyList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(proxyFilePath))) {
@@ -161,14 +160,23 @@ public class CategoryCrawlerTask {
         System.setProperty("socksProxyPort", "61336"); // set proxy port
     }
 
+    private void initHeaders() {
+        headers = new HashMap<>();
+        headers.put("Accept", "text/html,text/plain");
+        headers.put("Accept-Language", "en-us,en");
+        headers.put("Accept-Encoding", "gzip");
+        headers.put("Accept-Charset", "utf-8");
+    }
+
     private void setProxy() {
         do {
-            String proxy = proxyList.get(index);
+            String proxy = proxyList.get(proxyIndex.get());
             log.debug("proxy = " + proxy);
             System.setProperty("socksProxyHost", proxy); // set proxy server
-            index++;
-            if (index == proxyList.size()) {
-                index = 0;
+            if (proxyIndex.get() == proxyList.size() - 1) {
+                proxyIndex.set(0);
+            } else {
+                proxyIndex.incrementAndGet();
             }
         } while (!testProxy());
     }
@@ -182,13 +190,5 @@ public class CategoryCrawlerTask {
         }
 
         return true;
-    }
-
-    private void initHeaders() {
-        headers = new HashMap<>();
-        headers.put("Accept", "text/html,text/plain");
-        headers.put("Accept-Language", "en-us,en");
-        headers.put("Accept-Encoding", "gzip");
-        headers.put("Accept-Charset", "utf-8");
     }
 }

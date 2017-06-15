@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/price-monitor")
+@RequestMapping("/price-monitors")
 @Log4j
 public class PriceMonitorApi {
     @Autowired
@@ -16,9 +16,9 @@ public class PriceMonitorApi {
     @Autowired
     private ProductService productService;
 
-    @RequestMapping(value = "test", method = RequestMethod.GET)
-    public String test() {
-        return "Success";
+    @RequestMapping(value = "version", method = RequestMethod.GET)
+    public String getVersion() {
+        return "1.0.0";
     }
 
     @RequestMapping(value = "products/{priority}", method = RequestMethod.POST)

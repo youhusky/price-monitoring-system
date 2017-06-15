@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/users")
 @Log4j
 public class UserServiceApi {
     private UserService userService;
@@ -28,9 +28,9 @@ public class UserServiceApi {
         this.productService = productService;
     }
 
-    @RequestMapping("test")
-    public String test() {
-        return "Success";
+    @RequestMapping(value = "version", method = RequestMethod.GET)
+    public String getVersion() {
+        return "1.0.0";
     }
 
     @RequestMapping(value = "categories", method = RequestMethod.GET)
@@ -38,7 +38,7 @@ public class UserServiceApi {
         return categoryService.getAllCategories();
     }
 
-    @RequestMapping(value="users/{userId}/categories/{categoryId}", method= RequestMethod.POST)
+    @RequestMapping(value="{userId}/categories/{categoryId}", method= RequestMethod.POST)
     public String subscribe(@PathVariable Long userId, @PathVariable Long categoryId) {
         try {
             userService.subscribeCategory(userId, categoryId);
@@ -51,7 +51,7 @@ public class UserServiceApi {
         return "Success";
     }
 
-    @RequestMapping(value="users/{userId}/categories/{categoryId}", method= RequestMethod.DELETE)
+    @RequestMapping(value="{userId}/categories/{categoryId}", method= RequestMethod.DELETE)
     public String unsubscribe(@PathVariable Long userId, @PathVariable Long categoryId) {
         try {
             userService.unSubscribeCategory(userId, categoryId);
@@ -64,19 +64,19 @@ public class UserServiceApi {
         return "Success";
     }
 
-    @RequestMapping(value="users", method= RequestMethod.POST)
+    @RequestMapping(value="", method= RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
 
-    @RequestMapping(value="users/{userId}", method= RequestMethod.PUT)
+    @RequestMapping(value="{userId}", method= RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public User updateUser(@RequestBody User user) {
         return userService.updateUser(user);
     }
 
-    @RequestMapping(value="users/{userId}", method= RequestMethod.DELETE)
+    @RequestMapping(value="{userId}", method= RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public String deleteUser(@PathVariable Long userId) {
         try {

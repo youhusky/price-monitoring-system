@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/instant-notification")
+@RequestMapping("/instant-notifications")
 public class InstantNotificationServiceController {
     private ReducedProductSink reducedProductSink;
 
@@ -16,9 +16,9 @@ public class InstantNotificationServiceController {
         this.reducedProductSink = reducedProductSink;
     }
 
-    @RequestMapping(value = "test", method = RequestMethod.GET)
-    public String test() {
-        return "Success";
+    @RequestMapping(value = "version", method = RequestMethod.GET)
+    public String getVersion() {
+        return "1.0.0";
     }
 
     @RequestMapping(value="products", method= RequestMethod.POST)

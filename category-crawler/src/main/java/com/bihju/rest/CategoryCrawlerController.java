@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/category-crawler")
+@RequestMapping("/category-crawlers")
 public class CategoryCrawlerController {
     private CategoryCrawlerTask categoryCrawlerTask;
     private UserCountThresholdService userCountThresholdService;
@@ -21,9 +21,9 @@ public class CategoryCrawlerController {
         this.userCountThresholdService = userCountThresholdService;
     }
 
-    @RequestMapping(value = "test", method = RequestMethod.GET)
-    public String test() {
-        return "Success";
+    @RequestMapping(value = "version", method = RequestMethod.GET)
+    public String getVersion() {
+        return "1.0.0";
     }
 
     @RequestMapping(value = "categories", method = RequestMethod.GET)

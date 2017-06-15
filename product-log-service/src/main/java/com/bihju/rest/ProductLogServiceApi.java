@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("product-loggers")
 public class ProductLogServiceApi {
     private ProductLogService productLogService;
 
@@ -18,12 +18,12 @@ public class ProductLogServiceApi {
         this.productLogService = productLogService;
     }
 
-    @RequestMapping(value = "test", method = RequestMethod.GET)
-    public String test() {
-        return "Success";
+    @RequestMapping(value = "version", method = RequestMethod.GET)
+    public String getVersion() {
+        return "1.0.0";
     }
 
-    @RequestMapping(value = "logs", method = RequestMethod.POST)
+    @RequestMapping(value = "/logs", method = RequestMethod.POST)
     public String saveLogToDB(@RequestBody ProductLog productLog) {
         productLogService.saveLogToDB(productLog);
         return "Success";

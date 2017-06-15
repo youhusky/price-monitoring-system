@@ -6,12 +6,18 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.Executor;
 
 @Log4j
 @EnableCircuitBreaker
 @SpringBootApplication
 @EnableScheduling
+@EnableAsync
 public class CategoryCrawlerApp implements CommandLineRunner {
     private CategoryCrawlerTask categoryCrawlerTask;
 
@@ -32,6 +38,16 @@ public class CategoryCrawlerApp implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         categoryCrawlerTask.init(strings[0]);
-//        categoryCrawlerTask.startCrawling();
+    }
+
+    @Bean
+    public Executor asyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(2);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("CategoryCrawlerApp-");
+        executor.initialize();
+        return executor;
     }
 }
