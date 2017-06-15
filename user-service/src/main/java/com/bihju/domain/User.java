@@ -2,11 +2,14 @@ package com.bihju.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@RequiredArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Table(name = "user", indexes = {@Index(name = "index_email", columnList = "email", unique = true)})
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class User {

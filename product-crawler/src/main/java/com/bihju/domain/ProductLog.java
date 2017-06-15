@@ -5,15 +5,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.PersistenceConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 public class ProductLog {
     public enum Status {
         SUCCESS, FAIL

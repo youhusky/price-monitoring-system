@@ -23,7 +23,7 @@ public class ProductLogServiceApi {
         return "1.0.0";
     }
 
-    @RequestMapping(value = "/logs", method = RequestMethod.POST)
+    @RequestMapping(value = "logs", method = RequestMethod.POST)
     public String saveLogToDB(@RequestBody ProductLog productLog) {
         productLogService.saveLogToDB(productLog);
         return "Success";

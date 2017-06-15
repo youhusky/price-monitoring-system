@@ -1,11 +1,14 @@
 package com.bihju.domain;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@RequiredArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Table(name = "product", indexes = {@Index(name = "index_product_id", columnList = "productId", unique = true)})
 public class Product {
     @Id
