@@ -8,7 +8,11 @@ import com.bihju.service.ProductService;
 import com.bihju.service.UserService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -90,8 +94,21 @@ public class UserServiceApi {
         return "Success";
     }
 
-    @RequestMapping(value = "deals/{categoryId}", method = RequestMethod.GET)
-    public List<Product> search(@PathVariable long categoryId) {
-        return productService.findProduct(categoryId);
+    @RequestMapping(value = "deals", method = RequestMethod.GET)
+    public Page<Product> searchDeals(
+            @RequestParam(value = "categoryIdString", required = false) Long categoryId,
+            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
+            @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "updateTime") String sortBy
+            ) throws Exception {
+
+        Assert.isTrue(page >= 0, "Page index must be >= 0");
+        Assert.isTrue(direction.equalsIgnoreCase(Sort.Direction.ASC.toString())
+                || direction.equalsIgnoreCase(Sort.Direction.DESC.toString()),
+                "Direction should be ASC or DESC");
+
+        PageRequest pageRequest = new PageRequest(page, size, Sort.Direction.fromString(direction), sortBy);
+        return productService.searchDeals(categoryId, pageRequest);
     }
 }
