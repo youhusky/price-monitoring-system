@@ -1,0 +1,40 @@
+1. Start user-service.
+2. Create user.
+3. Subscribe category.
+4. Show user_category content.
+5. Start category crawler.
+6. Show Category table.
+7. Stop category crawler.
+8. Start Product crawler.
+9. Show RabbitMQ: q_product_p(n), q_product_log.
+10. Start Price-monitoring-service.
+11. Show RabbitMQ: q_discount_product_p(n).
+12. Start product-log-service.
+13. Show RabbitMQ: q_product_log.
+14. Start instant-notification-service.
+15. Show email.
+16. Query discounts.
+
+
+
+
+
+
+Pre:
+1. Start MongoDB & RabbitMQ.
+    > docker-compose up
+
+2. Connect to MongoDB at docker:
+> docker exec -it 6da bash
+# mongo
+> show dbs
+> use test
+> show collections
+> db.productLog.find().pretty()
+> db.productLog.deleteMany({})
+> db.productLog.find().sort({"create_time": -1})
+> db.productLog.count()
+
+
+
+
