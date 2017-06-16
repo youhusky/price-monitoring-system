@@ -37,6 +37,22 @@ Pre:
 > db.productLog.find().sort({"create_time": -1})
 > db.productLog.count()
 
+3. Check Redis key value:
+> redis-cli ping
+> brew services start redis
+
+> redis-cli
+# config get databases  --- show all databases
+# select <db index>     --- use db
+# info keyspace     --- show key counts
+# keys *        --- show all keys
+# mget <key>    --- show value of key
+
+# flushall      --- delete in all dbs
+# flushdb       --- delete all in db
+# set key1 "hello"  --- set key value
+# del key1 key2     --- delete keys
+
 
 
 
