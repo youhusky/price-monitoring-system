@@ -42,61 +42,38 @@ public class ProductProcessor {
     public void checkProductHigh(Product product) throws Exception {
         log.info("Product received on channel 1, productId = " + product.getProductId());
 
-        if (!isProductExist(product)) {
-            cacheProduct(product);
-            productService.createProduct(product);
-        } else {
-            double oldPrice = getOldPrice(product);
-            double newPrice = product.getPrice();
-
-            if (oldPrice != newPrice) {
-                updateCache(product);
-                productService.updateProduct(product);
-            }
-            if (oldPrice > newPrice) {
-                output1.send(MessageBuilder.withPayload(product).build());
-            }
-        }
+        processProduct(product);
     }
 
     @ServiceActivator(inputChannel = Processors.INPUT2)
     public void checkProductMedium(Product product) throws Exception {
         log.info("Product received on channel 2, productId = " + product.getProductId());
 
-        if (!isProductExist(product)) {
-            cacheProduct(product);
-            productService.createProduct(product);
-        } else {
-            double oldPrice = getOldPrice(product);
-            double newPrice = product.getPrice();
-
-            if (oldPrice != newPrice) {
-                updateCache(product);
-                productService.updateProduct(product);
-            }
-            if (oldPrice > newPrice) {
-                output2.send(MessageBuilder.withPayload(product).build());
-            }
-        }
+        processProduct(product);
     }
 
     @ServiceActivator(inputChannel = Processors.INPUT3)
     public void checkProductLow(Product product) throws Exception {
         log.info("Product received on channel 3, productId = " + product.getProductId());
 
+        processProduct(product);
+    }
+
+    private void processProduct(Product product) {
         if (!isProductExist(product)) {
-            cacheProduct(product);
+            cacheProductPrice(product);
             productService.createProduct(product);
         } else {
-            double oldPrice = getOldPrice(product);
-            double newPrice = product.getPrice();
+            double cachedPrice = getCachedPrice(product);
 
-            if (oldPrice != newPrice) {
+            if (cachedPrice != product.getPrice()) {
+                product.setOldPrice(cachedPrice);
+                if (cachedPrice > product.getPrice()) {
+                    output1.send(MessageBuilder.withPayload(product).build());
+                }
+
                 updateCache(product);
                 productService.updateProduct(product);
-            }
-            if (oldPrice > newPrice) {
-                output3.send(MessageBuilder.withPayload(product).build());
             }
         }
     }
@@ -112,15 +89,14 @@ public class ProductProcessor {
                 + ", new price = " + ops.get(productId));
     }
 
-    private void cacheProduct(Product product) {
+    private void cacheProductPrice(Product product) {
         String productId = product.getProductId();
         ops.set(productId, String.valueOf(product.getPrice()));
         log.debug("product is stored in cache, productId = " + productId
                 + ", cached price = " + ops.get(productId));
     }
 
-    private double getOldPrice(Product product) {
-        String productId = product.getProductId();
-        return Double.parseDouble(ops.get(productId));
+    private double getCachedPrice(Product product) {
+        return Double.parseDouble(ops.get(product.getProductId()));
     }
 }

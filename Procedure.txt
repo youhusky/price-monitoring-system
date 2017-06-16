@@ -1,4 +1,5 @@
 1. Start user-service.
+2. Show /health.
 2. Create user.
 3. Subscribe category.
 4. Show user_category content.
@@ -14,6 +15,7 @@
 14. Start instant-notification-service.
 15. Show email.
 16. Query discounts.
+
 
 
 

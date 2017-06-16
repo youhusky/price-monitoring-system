@@ -26,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void updateProduct(Product product) {
         Product current = productRepository.findProductByProductId(product.getProductId());
-        current.setOldPrice(current.getPrice());
+        current.setOldPrice(product.getOldPrice());
         current.setPrice(product.getPrice());
         current.setUpdateTime(System.currentTimeMillis());
         productRepository.save(current);
