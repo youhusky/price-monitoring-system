@@ -10,6 +10,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+
 @RequiredArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 public class ProductLog {
     public enum Status {
@@ -22,7 +23,7 @@ public class ProductLog {
     private String productUrl;
     private String categoryName;
     private int pageNumber;
-    private long timestampInMilli;
+    private long createTime;
 
     @JsonCreator
     public ProductLog(@JsonProperty("status") Status status, @JsonProperty("category_name") String categoryName,
@@ -34,6 +35,6 @@ public class ProductLog {
         this.productUrl = productUrl;
         this.pageNumber = pageNumber;
         this.threadId = Thread.currentThread().getId();
-        this.timestampInMilli = System.currentTimeMillis();
+        this.createTime = System.currentTimeMillis();
     }
 }
