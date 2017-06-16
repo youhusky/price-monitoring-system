@@ -7,12 +7,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.PersistenceConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
-@Entity
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @RequiredArgsConstructor(onConstructor = @__(@PersistenceConstructor))
@@ -21,12 +16,7 @@ public class ProductLog {
         SUCCESS, FAIL
     }
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
     private Status status = Status.SUCCESS;
-    @Column(name="message", columnDefinition = "VARCHAR(2000)")
     private String message;
     private long threadId;
     private String productUrl;
@@ -46,5 +36,4 @@ public class ProductLog {
         this.threadId = Thread.currentThread().getId();
         this.timestampInMilli = System.currentTimeMillis();
     }
-
 }

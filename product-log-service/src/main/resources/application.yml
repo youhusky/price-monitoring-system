@@ -10,18 +10,3 @@ spring:
           group: default
           destination: q_product_log
           durableSubscription: true
-
-  datasource:
-    url: jdbc:mysql://localhost/price_monitor
-    username: testuser
-    password: testpass
-    driver-class-name: com.mysql.jdbc.Driver
-
-  jpa:
-    properties:
-      hibernate:
-        show_sql: true
-        use_sql_comments: true
-        format_sql: true
-        dialect: org.hibernate.dialect.MySQL5Dialect
-    hibernate.ddl-auto: update
