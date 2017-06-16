@@ -3,7 +3,6 @@ package com.bihju.util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -51,11 +50,11 @@ public class MailUtil {
                 helper.setText(body, true);
             } catch (MessagingException e) {
                 e.printStackTrace();
-                log.warn("Failed to send mail to " + StringUtils.join(receivers, ", "));
+                log.warn("Failed to send mail to " + String.join(", ", receivers));
             } finally {}
 
             javaMailSender.send(message);
-            log.info("Sent mail to " + StringUtils.join(receivers, ", "));
+            log.info("Sent mail to " + String.join(", ", receivers));
         }
     }
 }

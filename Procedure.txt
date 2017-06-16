@@ -53,6 +53,10 @@ Pre:
 # set key1 "hello"  --- set key value
 # del key1 key2     --- delete keys
 
+4. Open RabbitMQ UI
+http://localhost:15672/
+guest/guest
+
 
 
 
