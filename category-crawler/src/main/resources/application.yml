@@ -20,3 +20,7 @@ spring:
     hibernate.ddl-auto: update
 
 user_count_threshold: 1
+
+management:
+  security:
+    enabled: false

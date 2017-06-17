@@ -10,3 +10,7 @@ spring:
           group: default
           destination: q_product_log
           durableSubscription: true
+
+management:
+  security:
+    enabled: false

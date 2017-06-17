@@ -34,3 +34,6 @@ spring:
         dialect: org.hibernate.dialect.MySQL5Dialect
     hibernate.ddl-auto: update
 
+management:
+  security:
+    enabled: false

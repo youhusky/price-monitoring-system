@@ -1,28 +1,47 @@
 1. Start user-service.
-2. Show /health.
-2. Create user.
+
+2. Create user-service.
+    Show MySQL (user)
+
 3. Subscribe category.
-4. Show user_category content.
-5. Start category crawler.
-6. Show Category table.
-7. Stop category crawler.
-8. Start Product crawler.
-9. Show RabbitMQ: q_product_p(n), q_product_log.
+    Show MySQL (user_category)
+
+4. UnSubscribe category.
+    Show MySQL (user_category)
+
+5. Start category-crawler.
+    Show MySQL (category)
+
+7. Stop category-crawler.
+
+8. Start product-crawler.
+    Show RabbitMQ: queues (q_product_p(n), q_product_log)
+
+    Show mongodb (db.productLog.find().pretty())
+    Show mongodb (db.productLog.count())
+9. Start product-log-service.
+    Show q_product_log
+    Show q_product_p(n)
+    Show mongodb (db.productLog.find().pretty())
+
+
 10. Start Price-monitoring-service.
-11. Show RabbitMQ: q_discount_product_p(n).
-12. Start product-log-service.
-13. Show RabbitMQ: q_product_log.
-14. Start instant-notification-service.
-15. Show email.
-16. Query discounts.
+    Show q_product_log
+    Show q_product_p(n)
+    Show q_discount_product_p(n)
 
+11. Start instant-notification-service.
+    Show q_discount_product_p(n)
 
+12. Query deals.
 
+13. Show email.
 
+14. Show localhost:9004/health /metrics /info /env.
 
-
-
+===================================================
 Pre:
+
 1. Start MongoDB & RabbitMQ.
     > docker-compose up
 

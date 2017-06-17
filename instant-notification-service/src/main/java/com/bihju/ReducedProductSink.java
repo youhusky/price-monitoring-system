@@ -19,7 +19,13 @@ public class ReducedProductSink {
     private final static String MAIL_SUBJECT = "Your Instant Deal Alert";
     private final static String MAIL_TEMPLATE = "<html><body>Hello,<br><br>" +
             "The following is your instant deal alert:<br><br>" +
-            "Product: $PRODUCT_TITLE<br>Price: $$NEW_PRICE<br>Original price: $$OLD_PRICE<br></body></html>";
+            // TODO find out why this is not working
+//            "Product: <a href=\"$DETAIL_URL\">$PRODUCT_TITLE</a><br>" +
+            "Product: $PRODUCT_TITLE<br>" +
+            "DetailUrl: $DETAIL_URL<br>" +
+            "Price: $$NEW_PRICE<br>" +
+            "Original price: $$OLD_PRICE<br>" +
+            "CategoryId: $CATEGORY_ID</body></html>";
     private UserService userService;
     private MailUtil mailUtil;
     @Value("${spring.mail.username}")
@@ -64,7 +70,10 @@ public class ReducedProductSink {
     }
 
     private void sendNotification(String[] emails, Product product) {
-        String body = MAIL_TEMPLATE.replace("$PRODUCT_TITLE", product.getTitle())
+        String body = MAIL_TEMPLATE
+                .replace("$PRODUCT_TITLE", product.getTitle())
+                .replace("$DETAIL_URL", product.getDetailUrl())
+                .replace("$CATEGORY_ID", String.valueOf(product.getCategoryId()))
                 .replace("$NEW_PRICE", String.valueOf(product.getPrice()))
                 .replace("$OLD_PRICE", String.valueOf(product.getOldPrice()));
         mailUtil.send(emails, MAIL_USER, MAIL_USER
