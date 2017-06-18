@@ -116,6 +116,8 @@ public class CategoryCrawlerTask {
         log.info("Finish category priority setting");
     }
 
+    @Scheduled(cron = "0 0 0 * * MON-SAT")   // every Monday to Saturday
+    @Async
     public void updateCategoryPriorities() {
         List<Object[]> results = categoryService.getHighPriorityCategories();
         for (Object[] result : results) {
