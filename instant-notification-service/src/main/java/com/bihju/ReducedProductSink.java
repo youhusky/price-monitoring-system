@@ -20,12 +20,13 @@ public class ReducedProductSink {
     private final static String MAIL_TEMPLATE = "<html><body>Hello,<br><br>" +
             "The following is your instant deal alert:<br><br>" +
             // TODO find out why this is not working
-//            "Product: <a href=\"$DETAIL_URL\">$PRODUCT_TITLE</a><br>" +
+//            "Product: <a href='$DETAIL_URL'>$PRODUCT_TITLE</a><br>" +
             "Product: $PRODUCT_TITLE<br>" +
             "DetailUrl: $DETAIL_URL<br>" +
             "Price: $$NEW_PRICE<br>" +
             "Original price: $$OLD_PRICE<br>" +
             "CategoryId: $CATEGORY_ID</body></html>";
+
     private UserService userService;
     private MailUtil mailUtil;
     @Value("${spring.mail.username}")
