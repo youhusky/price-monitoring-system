@@ -24,37 +24,53 @@ public class ProductCrawlerWorker implements Runnable {
     private static final String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36";
     private static final String PRODUCT_SELECTOR = "li[data-asin]";
     private static final String[] TITLE_SELECTORS = {
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-small.a-grid-vertical-align.a-grid-center > div > a > span",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div.a-row.a-spacing-none.scx-truncate-medium.sx-line-clamp-2 > a > h2",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div:nth-child(1) > a > h2",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div:nth-child(1) > a",
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div.a-row.a-spacing-mini > a > h2",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div > a > h2",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-small.a-grid-vertical-align.a-grid-center > div > a > span",
             "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div.a-row.a-spacing-micro > a > h2",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-small.a-grid-vertical-align.a-grid-center > div > a > img",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div.a-row.a-spacing-mini > a > h2",
+            "#result_$RESULT_NO > div > div:nth-child(3) > div:nth-child(1) > a > h2",
             "#result_$RESULT_NO > div > div:nth-child(3) > div:nth-child(1) > a"
     };
+    private static final String[] FULL_PRICE_SELECTORS = {
+            "#result_$RESULT_NO > div > div:nth-child(4) > div > a > span.a-size-base.a-color-base"
+    };
     private static final String[] PRICE_WHOLE_SELECTORS = {
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div:nth-child(2) > a > span > span > span > span",
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > span",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > table > tbody > tr.a-spacing-none.s-table-twister-row-no-border.s-table-twister-row > td:nth-child(2) > div > a > span > span > span",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div:nth-child(2) > a > span > span > span:nth-child(2)",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > span",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > span",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div:nth-child(2) > a > span > span > span",
             "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div:nth-child(2) > a > span > span > span > span",
-            "#result_$RESULT_NO > div > div:nth-child(4) > a > span.a-color-base.sx-zero-spacing > span > span"
+            "#result_$RESULT_NO > div > div:nth-child(4) > a > span.a-color-base.sx-zero-spacing > span > span",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > span"
     };
     private static final String[] PRICE_FRACTION_SELECTORS = {
-            "#result_RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div:nth-child(2) > a > span > span > span > sup.sx-price-fractional",
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > sup.sx-price-fractional",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > table > tbody > tr.a-spacing-none.s-table-twister-row-no-border.s-table-twister-row > td:nth-child(2) > div > a > span > span > sup.sx-price-fractional",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > sup.sx-price-fractional",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > sup.sx-price-fractional",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div:nth-child(2) > a > span > span > sup.sx-price-fractional",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div:nth-child(2) > a > span > span > sup:nth-child(3)",
             "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div:nth-child(2) > a > span > span > span > sup.sx-price-fractional",
-            "#result_RESULT_NO > div > div:nth-child(4) > a > span.a-color-base.sx-zero-spacing > span > sup.sx-price-fractional"
+            "#result_$RESULT_NO > div > div:nth-child(4) > a > span.a-color-base.sx-zero-spacing > span > sup.sx-price-fractional",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > sup.sx-price-fractional"
     };
     private static final String[] THUMNAIL_SELECTORS = {
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-base > div > div > a > img",
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-base > div > a > img",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-left > div > div > a > img",
-            "#rot-$PRODUCT_ID > div > a > div.s-card.s-card-group-rot-$PRODUCT_ID.s-active > img"
+            "#rot-$PRODUCT_ID > div > a > div.s-card.s-card-group-rot-$PRODUCT_ID.s-active > img",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-base > div > div > a > img",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-base > div > a > img"
     };
     private static final String[] DETAIL_URL_SELECTORS = {
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div.a-row.a-spacing-micro > a",
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div.a-row.a-spacing-mini > a",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div.a-row.a-spacing-none.scx-truncate-medium.sx-line-clamp-2 > a",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div:nth-child(1) > a",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div.a-row.a-spacing-small > div > a",
             "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div.a-row.a-spacing-micro > a",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-small.a-grid-vertical-align.a-grid-center > div > a",
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div.a-row.a-spacing-mini > a",
             "#result_$RESULT_NO > div > div:nth-child(3) > div:nth-child(1) > a"
     };
     private static final int TIMEOUT_IN_MILLISECONDS = 100000;
@@ -206,7 +222,9 @@ public class ProductCrawlerWorker implements Runnable {
                     continue;
                 }
 
-                break;
+                if (isWholePriceValid) {
+                    break;
+                }
             }
         }
 
@@ -229,10 +247,38 @@ public class ProductCrawlerWorker implements Runnable {
                     continue;
                 }
 
-                break;
+                if (product.getPrice() != 0.0) {
+                    break;
+                }
             }
         }
 
+        if (product.getPrice() == 0.0) {
+            for (String fullPriceSelector : FULL_PRICE_SELECTORS) {
+                String fullSelector = fullPriceSelector.replace("$RESULT_NO", String.valueOf(index));
+                Element fullElement = doc.select(fullSelector).first();
+                if (fullElement != null) {
+                    productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
+                            "full price = " + fullElement.text() + ", index = " + index));
+                    String fullPrice = fullElement.text();
+                    if (fullPrice.contains(",")) {
+                        fullPrice = fullPrice.replaceAll(",", "");
+                    }
+
+                    try {
+                        product.setPrice(Double.parseDouble(fullPrice));
+                    } catch (NumberFormatException e) {
+                        productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
+                                "Cannot parse price full value for product index: " + index));
+                        continue;
+                    }
+
+                    if (product.getPrice() != 0.0) {
+                        break;
+                    }
+                }
+            }
+        }
 
         // Some product is free, it's ok if there is no price set.
         return true;
