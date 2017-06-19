@@ -12,10 +12,10 @@ import org.springframework.stereotype.Repository;
 @RepositoryRestResource(path = "products", collectionResourceRel = "products")
 public interface ProductRepository extends PagingAndSortingRepository<Product, Long> {
     @Query("select p from Product p " +
-            "where p.price < p.oldPrice")
+            "where p.price < p.oldPrice and p.price <> 0")
     Page<Product> findAll(Pageable pageable);
 
     @Query("select p from Product p " +
-            "where p.categoryId = :categoryId and p.price < p.oldPrice")
+            "where p.categoryId = :categoryId and p.price < p.oldPrice and p.price <> 0")
     Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
 }

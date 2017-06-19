@@ -6,6 +6,9 @@ import com.bihju.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 @Service
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
@@ -18,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void createProduct(Product product) {
         product.setOldPrice(product.getPrice());
-        product.setDiscountPercent(0);
+        product.setDiscountPercent(0.0);
         product.setCreateTime(System.currentTimeMillis());
         product.setUpdateTime(System.currentTimeMillis());
         productRepository.save(product);
@@ -39,11 +42,12 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findProductByProductId(productId);
     }
 
-    private int getDiscountPercent(double oldPrice, double newPrice) {
+    double getDiscountPercent(double oldPrice, double newPrice) {
         if (oldPrice == 0 || oldPrice <= newPrice) {
             return 0;
         } else {
-            return (int) ((oldPrice - newPrice) * 100 / oldPrice);
+            Double tmpDouble = (oldPrice - newPrice) * 100 / oldPrice;
+            return BigDecimal.valueOf(tmpDouble).setScale(2, RoundingMode.HALF_UP).doubleValue();
         }
     }
 }

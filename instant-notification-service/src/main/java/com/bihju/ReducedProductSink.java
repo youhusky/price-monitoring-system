@@ -25,6 +25,7 @@ public class ReducedProductSink {
             "DetailUrl: $DETAIL_URL<br>" +
             "Price: $$NEW_PRICE<br>" +
             "Original price: $$OLD_PRICE<br>" +
+            "Discount percent: $DISCOUNT_PERCENT<br>" +
             "CategoryId: $CATEGORY_ID</body></html>";
 
     private UserService userService;
@@ -75,6 +76,7 @@ public class ReducedProductSink {
                 .replace("$PRODUCT_TITLE", product.getTitle())
                 .replace("$DETAIL_URL", product.getDetailUrl())
                 .replace("$CATEGORY_ID", String.valueOf(product.getCategoryId()))
+                .replace("$DISCOUNT_PERCENT", String.valueOf(product.getDiscountPercent()))
                 .replace("$NEW_PRICE", String.valueOf(product.getPrice()))
                 .replace("$OLD_PRICE", String.valueOf(product.getOldPrice()));
         mailUtil.send(emails, MAIL_USER, MAIL_USER
