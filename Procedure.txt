@@ -55,6 +55,7 @@ Pre:
 > db.productLog.deleteMany({})
 > db.productLog.find().sort({"create_time": -1})
 > db.productLog.count()
+> db.productLog.remove({})      // remove all
 
 3. Check Redis key value:
 > redis-cli ping

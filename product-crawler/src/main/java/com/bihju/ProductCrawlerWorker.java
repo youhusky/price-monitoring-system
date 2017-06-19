@@ -36,27 +36,36 @@ public class ProductCrawlerWorker implements Runnable {
             "#result_$RESULT_NO > div > div:nth-child(3) > div:nth-child(1) > a"
     };
     private static final String[] FULL_PRICE_SELECTORS = {
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div > table > tbody > tr > td:nth-child(2) > ul > li:nth-child(1) > span > span.a-size-small.a-color-secondary > span",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(4) > div > table > tbody > tr > td:nth-child(2) > ul > li:nth-child(1) > span > span.a-size-small.a-color-secondary > span",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div.a-row.a-spacing-top-mini.a-spacing-mini > div > a > span.a-size-base.a-color-base",
             "#result_$RESULT_NO > div > div:nth-child(4) > div > a > span.a-size-base.a-color-base"
     };
     private static final String[] PRICE_WHOLE_SELECTORS = {
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > table > tbody > tr.a-spacing-none.s-table-twister-row-no-border.s-table-twister-row > td:nth-child(2) > div > a > span > span > span",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > table > tbody > tr.a-spacing-none.s-table-twister-row-no-border.s-table-twister-row > td:nth-child(2) > div > a > span > span > span",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div:nth-child(2) > a > span > span > span:nth-child(2)",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > span",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > span",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div:nth-child(2) > a > span > span > span",
             "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div:nth-child(2) > a > span > span > span > span",
             "#result_$RESULT_NO > div > div:nth-child(4) > a > span.a-color-base.sx-zero-spacing > span > span",
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > span"
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > span",
+            "#result_$RESULT_NO > div > div:nth-child(4) > div:nth-child(1) > a > span > span > span",
+            "#result_$RESULT_NO > div > div:nth-child(4) > div > a > span.a-size-base.a-color-base"
     };
     private static final String[] PRICE_FRACTION_SELECTORS = {
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > table > tbody > tr.a-spacing-none.s-table-twister-row-no-border.s-table-twister-row > td:nth-child(2) > div > a > span > span > sup.sx-price-fractional",
+            "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > table > tbody > tr.a-spacing-none.s-table-twister-row-no-border.s-table-twister-row > td:nth-child(2) > div > a > span > span > sup.sx-price-fractional",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(3) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > sup.sx-price-fractional",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div.a-row.a-spacing-none > a > span > span > sup.sx-price-fractional",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div:nth-child(2) > a > span > span > sup.sx-price-fractional",
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-right > div:nth-child(2) > div.a-column.a-span7 > div:nth-child(2) > a > span > span > sup:nth-child(3)",
             "#result_$RESULT_NO > div > div.a-row.a-spacing-none.s-color-subdued > div:nth-child(2) > a > span > span > span > sup.sx-price-fractional",
             "#result_$RESULT_NO > div > div:nth-child(4) > a > span.a-color-base.sx-zero-spacing > span > sup.sx-price-fractional",
-            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > sup.sx-price-fractional"
+            "#result_$RESULT_NO > div > div.a-row.a-spacing-none > div:nth-child(2) > a > span > span > sup.sx-price-fractional",
+            "#result_$RESULT_NO > div > div:nth-child(4) > div:nth-child(1) > a > span > span > sup.sx-price-fractional",
+            "#result_$RESULT_NO > div > div:nth-child(4) > div > a > span.a-letter-space"
     };
     private static final String[] THUMNAIL_SELECTORS = {
             "#result_$RESULT_NO > div > div > div > div.a-fixed-left-grid-col.a-col-left > div > div > a > img",
@@ -95,11 +104,11 @@ public class ProductCrawlerWorker implements Runnable {
 
     @Override
     public void run() {
-        int pageNum = 1;
+        int pageNum = 0;
         String categoryName = category.getCategoryName();
         boolean isMorePages = true;
         do {
-            String productListUrl = category.getProductListUrl().replace("$PAGE_NO", String.valueOf(pageNum++));
+            String productListUrl = category.getProductListUrl().replace("$PAGE_NO", String.valueOf(++pageNum));
             productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName,
                     productListUrl, pageNum, "Successful get product url."));
             Document doc = getDocument(productListUrl, proxyList, categoryName, productListUrl, pageNum);
@@ -120,6 +129,8 @@ public class ProductCrawlerWorker implements Runnable {
                         "Cannot get result index for element: " + results.get(i).toString()));
                     continue;
                 }
+
+                log.info("index = " + index + ", categoryId = " + category.getId() + ", threadId = " + Thread.currentThread().getId());
 
                 try {
                     Product product = createProduct(doc, index, category.getId(), categoryName, productListUrl, pageNum);
@@ -146,6 +157,10 @@ public class ProductCrawlerWorker implements Runnable {
 
         if (!updatePrice(product, doc, index, categoryName, productListUrl, pageNum)) {
             return null;
+        }
+
+        if (product.getPrice() == 0.0) {
+            log.info("*** product price == 0.0, index = " + index + ", categoryId = " + category.getId() + ", threadId = " + Thread.currentThread().getId());
         }
 
         if (!updateDetailUrl(product, doc, index, categoryName, productListUrl, pageNum)) {
@@ -229,6 +244,34 @@ public class ProductCrawlerWorker implements Runnable {
         }
 
         if (!isWholePriceValid) {
+            for (String fullPriceSelector : FULL_PRICE_SELECTORS) {
+                String fullSelector = fullPriceSelector.replace("$RESULT_NO", String.valueOf(index));
+                Element fullElement = doc.select(fullSelector).first();
+                if (fullElement != null) {
+                    productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
+                            "full price = " + fullElement.text() + ", index = " + index));
+                    String fullPrice = fullElement.text();
+                    if (!fullPrice.startsWith("$")) {
+                        continue;
+                    }
+
+                    if (fullPrice.contains(",")) {
+                        fullPrice = fullPrice.replaceAll(",", "");
+                    }
+
+                    try {
+                        product.setPrice(Double.parseDouble(fullPrice.substring(1)));
+                    } catch (NumberFormatException e) {
+                        productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
+                                "Cannot parse price full value for product index: " + index));
+                        continue;
+                    }
+
+                    if (product.getPrice() != 0.0) {
+                        break;
+                    }
+                }
+            }
             // Some product is free, it's ok if there is no price set.
             return true;
         }
@@ -249,33 +292,6 @@ public class ProductCrawlerWorker implements Runnable {
 
                 if (product.getPrice() != 0.0) {
                     break;
-                }
-            }
-        }
-
-        if (product.getPrice() == 0.0) {
-            for (String fullPriceSelector : FULL_PRICE_SELECTORS) {
-                String fullSelector = fullPriceSelector.replace("$RESULT_NO", String.valueOf(index));
-                Element fullElement = doc.select(fullSelector).first();
-                if (fullElement != null) {
-                    productSource.sendLogToQueue(new ProductLog(ProductLog.Status.SUCCESS, categoryName, productListUrl, pageNum,
-                            "full price = " + fullElement.text() + ", index = " + index));
-                    String fullPrice = fullElement.text();
-                    if (fullPrice.contains(",")) {
-                        fullPrice = fullPrice.replaceAll(",", "");
-                    }
-
-                    try {
-                        product.setPrice(Double.parseDouble(fullPrice));
-                    } catch (NumberFormatException e) {
-                        productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
-                                "Cannot parse price full value for product index: " + index));
-                        continue;
-                    }
-
-                    if (product.getPrice() != 0.0) {
-                        break;
-                    }
                 }
             }
         }

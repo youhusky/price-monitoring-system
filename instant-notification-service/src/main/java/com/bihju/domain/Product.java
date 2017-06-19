@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Product {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     private String productId;
     private long categoryId;
@@ -22,6 +22,7 @@ public class Product {
     private String detailUrl;
     private double price;
     private double oldPrice;
+    private int discountPercent;
     private long createTime;
     private long updateTime;
 }

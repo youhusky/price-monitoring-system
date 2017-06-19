@@ -18,6 +18,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void createProduct(Product product) {
         product.setOldPrice(product.getPrice());
+        product.setDiscountPercent(0);
         product.setCreateTime(System.currentTimeMillis());
         product.setUpdateTime(System.currentTimeMillis());
         productRepository.save(product);
@@ -28,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
         Product current = productRepository.findProductByProductId(product.getProductId());
         current.setOldPrice(product.getOldPrice());
         current.setPrice(product.getPrice());
+        current.setDiscountPercent(getDiscountPercent(product.getOldPrice(), product.getPrice()));
         current.setUpdateTime(System.currentTimeMillis());
         productRepository.save(current);
     }
@@ -35,5 +37,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProduct(String productId) {
         return productRepository.findProductByProductId(productId);
+    }
+
+    private int getDiscountPercent(double oldPrice, double newPrice) {
+        if (oldPrice == 0 || oldPrice <= newPrice) {
+            return 0;
+        } else {
+            return (int) ((oldPrice - newPrice) * 100 / oldPrice);
+        }
     }
 }

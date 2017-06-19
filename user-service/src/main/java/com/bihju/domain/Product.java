@@ -22,6 +22,7 @@ public class Product {
     private String detailUrl;
     private double price;
     private double oldPrice;
+    private int discountPercent;
     private long createTime;
     private long updateTime;
 }

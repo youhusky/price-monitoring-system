@@ -15,10 +15,9 @@ import java.io.IOException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
@@ -56,9 +55,21 @@ public class ProductCrawlerTask {
 
         List<Category> categoryList = getCategories(PRIORITY_HIGH);
         List<String> subProxyList = proxyList.subList(0, proxyList.size() / 3);
+        List<Future> futures = new LinkedList<>();
         for (Category category : categoryList) {
-            taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex1, headers, productSource, PRIORITY_HIGH));
+            Future future = taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex1, headers, productSource, PRIORITY_HIGH));
+            futures.add(future);
             delayBetweenCrawling();
+        }
+
+        for (Future future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
 
         log.info("End crawling high priority categories, threadId: " + Thread.currentThread().getId());
@@ -70,9 +81,21 @@ public class ProductCrawlerTask {
 
         List<Category> categoryList = getCategories(PRIORITY_MEDIUM);
         List<String> subProxyList = proxyList.subList(proxyList.size() / 3 + 1, proxyList.size() / 3 * 2);
+        List<Future> futures = new LinkedList<>();
         for (Category category : categoryList) {
-            taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex2, headers, productSource, PRIORITY_MEDIUM));
+            Future future = taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex2, headers, productSource, PRIORITY_MEDIUM));
+            futures.add(future);
             delayBetweenCrawling();
+        }
+
+        for (Future future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
 
         log.info("End crawling medium priority categories, threadId: " + Thread.currentThread().getId());
@@ -84,9 +107,21 @@ public class ProductCrawlerTask {
 
         List<Category> categoryList = getCategories(PRIORITY_LOW);
         List<String> subProxyList = proxyList.subList(proxyList.size() / 3 * 2, proxyList.size());
+        List<Future> futures = new LinkedList<>();
         for (Category category : categoryList) {
-            taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex3, headers, productSource, PRIORITY_LOW));
+            Future future = taskExecutor.submit(new ProductCrawlerWorker(category, subProxyList, proxyIndex3, headers, productSource, PRIORITY_LOW));
+            futures.add(future);
             delayBetweenCrawling();
+        }
+
+        for (Future future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
 
         log.info("End crawling low priority categories, threadId: " + Thread.currentThread().getId());
