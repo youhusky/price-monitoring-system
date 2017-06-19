@@ -68,11 +68,13 @@ public class ProductProcessor {
 
             if (cachedPrice != product.getPrice()) {
                 product.setOldPrice(cachedPrice);
-                updateCache(product);
-                productService.updateProduct(product);
+                product.setDiscountPercent(productService.getDiscountPercent(product.getOldPrice(), product.getPrice()));
                 if (cachedPrice > product.getPrice() && product.getPrice() != 0.0) {
                     output1.send(MessageBuilder.withPayload(product).build());
                 }
+
+                updateCache(product);
+                productService.updateProduct(product);
             }
         }
     }

@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
         Product current = productRepository.findProductByProductId(product.getProductId());
         current.setOldPrice(product.getOldPrice());
         current.setPrice(product.getPrice());
-        current.setDiscountPercent(getDiscountPercent(product.getOldPrice(), product.getPrice()));
+        current.setDiscountPercent(product.getDiscountPercent());
         current.setUpdateTime(System.currentTimeMillis());
         productRepository.save(current);
     }
@@ -42,7 +42,8 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findProductByProductId(productId);
     }
 
-    double getDiscountPercent(double oldPrice, double newPrice) {
+    @Override
+    public double getDiscountPercent(double oldPrice, double newPrice) {
         if (oldPrice == 0 || oldPrice <= newPrice) {
             return 0;
         } else {
