@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
-    Page<Product> searchDeals(Long categoryId, Pageable pageable);
+    Page<Product> searchDeals(Long categoryId, Double minDiscountPercent, Pageable pageable);
 }

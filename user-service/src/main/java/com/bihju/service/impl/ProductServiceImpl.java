@@ -18,11 +18,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> searchDeals(Long categoryId, Pageable pageable) {
+    public Page<Product> searchDeals(Long categoryId, Double minDiscountPercent, Pageable pageable) {
         if (categoryId == null) {
-            return productRepository.findAll(pageable);
+            return productRepository.findAll(minDiscountPercent, pageable);
         } else {
-            return productRepository.findByCategoryId(categoryId, pageable);
+            return productRepository.findByCategoryId(categoryId, minDiscountPercent, pageable);
         }
     }
 }

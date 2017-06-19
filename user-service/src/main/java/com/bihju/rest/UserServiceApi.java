@@ -96,7 +96,8 @@ public class UserServiceApi {
 
     @RequestMapping(value = "deals", method = RequestMethod.GET)
     public Page<Product> searchDeals(
-            @RequestParam(value = "categoryIdString", required = false) Long categoryId,
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(value = "minDiscountPercent", required = false, defaultValue = "0.0") Double minDiscountPercent,
             @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
             @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
@@ -109,6 +110,6 @@ public class UserServiceApi {
                 "Direction should be ASC or DESC");
 
         PageRequest pageRequest = new PageRequest(page, size, Sort.Direction.fromString(direction), sortBy);
-        return productService.searchDeals(categoryId, pageRequest);
+        return productService.searchDeals(categoryId, minDiscountPercent, pageRequest);
     }
 }
