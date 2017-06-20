@@ -25,7 +25,7 @@ public class ReducedProductSink {
             "DetailUrl: $DETAIL_URL<br>" +
             "Price: $$NEW_PRICE<br>" +
             "Original price: $$OLD_PRICE<br>" +
-            "Discount percent: $DISCOUNT_PERCENT<br>" +
+            "Discount percent: $DISCOUNT_PERCENT%<br>" +
             "CategoryId: $CATEGORY_ID</body></html>";
 
     private UserService userService;
