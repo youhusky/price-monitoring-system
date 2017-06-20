@@ -130,8 +130,6 @@ public class ProductCrawlerWorker implements Runnable {
                     continue;
                 }
 
-                log.info("index = " + index + ", categoryId = " + category.getId() + ", threadId = " + Thread.currentThread().getId());
-
                 try {
                     Product product = createProduct(doc, index, category.getId(), categoryName, productListUrl, pageNum);
                     if (product == null) {
@@ -160,7 +158,8 @@ public class ProductCrawlerWorker implements Runnable {
         }
 
         if (product.getPrice() == 0.0) {
-            log.info("*** product price == 0.0, index = " + index + ", categoryId = " + category.getId() + ", threadId = " + Thread.currentThread().getId());
+            productSource.sendLogToQueue(new ProductLog(ProductLog.Status.FAIL, categoryName, productListUrl, pageNum,
+                    "Product price == 0.0, index = " + index + ", categoryId = " + categoryId));
         }
 
         if (!updateDetailUrl(product, doc, index, categoryName, productListUrl, pageNum)) {
