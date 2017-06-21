@@ -43,9 +43,10 @@ public class UserServiceApi {
         return categoryService.getAllCategories();
     }
 
-    @RequestMapping(value="categories", method= RequestMethod.POST)
-    public String subscribe(@RequestBody UserCategory userCategory) {
+    @RequestMapping(value="{userId}/categories", method= RequestMethod.POST)
+    public String subscribe(@PathVariable Long userId, @RequestBody UserCategory userCategory) {
         try {
+            userCategory.setUserId(userId);
             userService.subscribeCategory(userCategory);
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -69,9 +70,10 @@ public class UserServiceApi {
         return "Success";
     }
 
-    @RequestMapping(value="categories", method= RequestMethod.PUT)
-    public String updateMinDiscountPervent(@RequestBody UserCategory userCategory) {
+    @RequestMapping(value="{userId}/categories", method= RequestMethod.PUT)
+    public String updateMinDiscountPervent(@PathVariable Long userId, @RequestBody UserCategory userCategory) {
         try {
+            userCategory.setUserId(userId);
             userService.updateMinDiscountPercent(userCategory);
         } catch (RuntimeException e) {
             e.printStackTrace();
