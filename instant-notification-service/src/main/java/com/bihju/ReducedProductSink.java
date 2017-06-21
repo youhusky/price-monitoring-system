@@ -22,7 +22,7 @@ public class ReducedProductSink {
             // TODO find out why this is not working
 //            "Product: <a href='$DETAIL_URL'>$PRODUCT_TITLE</a><br>" +
             "Product: $PRODUCT_TITLE<br>" +
-            "DetailUrl: $DETAIL_URL<br>" +
+//            "DetailUrl: $DETAIL_URL<br>" +
             "Price: $$NEW_PRICE<br>" +
             "Original price: $$OLD_PRICE<br>" +
             "Discount percent: $DISCOUNT_PERCENT%<br>" +
@@ -74,11 +74,12 @@ public class ReducedProductSink {
     private void sendNotification(String[] emails, Product product) {
         String body = MAIL_TEMPLATE
                 .replace("$PRODUCT_TITLE", product.getTitle())
-                .replace("$DETAIL_URL", product.getDetailUrl())
+//                .replace("$DETAIL_URL", product.getDetailUrl())
                 .replace("$CATEGORY_ID", String.valueOf(product.getCategoryId()))
                 .replace("$DISCOUNT_PERCENT", String.valueOf(product.getDiscountPercent()))
                 .replace("$NEW_PRICE", String.valueOf(product.getPrice()))
                 .replace("$OLD_PRICE", String.valueOf(product.getOldPrice()));
+        log.info("body = " + body);
         mailUtil.send(emails, MAIL_USER, MAIL_USER
                 , MAIL_SUBJECT, body);
     }

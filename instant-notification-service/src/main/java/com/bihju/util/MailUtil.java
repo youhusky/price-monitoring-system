@@ -43,12 +43,12 @@ public class MailUtil {
             MimeMessage message = javaMailSender.createMimeMessage();
             try {
                 MimeMessageHelper helper = new MimeMessageHelper(message, false, "utf-8");
-                message.setContent(body, "text/html");
+//                message.setContent(body, "text/html");
                 helper.setTo(receivers);
                 helper.setReplyTo(replyTo);
                 helper.setFrom(from);
                 helper.setSubject(subject);
-//                helper.setText(body, true);
+                helper.setText(body, true);
             } catch (MessagingException e) {
                 e.printStackTrace();
                 log.warn("Failed to send mail to " + String.join(", ", receivers));
