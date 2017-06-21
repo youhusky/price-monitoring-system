@@ -11,8 +11,11 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u.email from User u, UserCategory uc " +
-            "where u.id = uc.userId and uc.categoryId = :categoryId and u.notificationType = :notificationType")
+            "where u.id = uc.userId and uc.categoryId = :categoryId " +
+            "and u.notificationType = :notificationType " +
+            "and uc.minDiscountPercent <= :discountPercent")
     List<String> findEmailsByCategoryIdAndNotificationType(
             @Param("categoryId") Long categoryId,
-            @Param("notificationType") User.NotificationType notificationType);
+            @Param("notificationType") User.NotificationType notificationType,
+            @Param("discountPercent") Double discountPercent);
 }

@@ -61,7 +61,7 @@ public class ReducedProductSink {
         Thread thread = new Thread() {
             public void run() {
                 long categoryId = product.getCategoryId();
-                List<String> emails = userService.findUsersByCategoryId(categoryId);
+                List<String> emails = userService.findUsersByCategoryId(categoryId, product.getDiscountPercent());
                 if (!emails.isEmpty()) {
                     sendNotification(emails.toArray(new String[0]), product);
                 }

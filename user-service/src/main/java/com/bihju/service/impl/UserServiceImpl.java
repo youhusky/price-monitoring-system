@@ -50,22 +50,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void subscribeCategory(Long userId, Long categoryId) throws RuntimeException {
+    public void subscribeCategory(UserCategory userCategory) throws RuntimeException {
+        long userId = userCategory.getUserId();
         User user = userRepository.findUserById(userId);
         if (user == null) {
-            throw new RuntimeException("Invalid user id: " + userId);
-        }
-        Category category = categoryRepository.findCategoryById(categoryId);
-        if (category == null) {
-            throw new RuntimeException("Invalid category id: " + categoryId);
+            throw new RuntimeException("Invalid user id: " + userCategory.getUserId());
         }
 
-        UserCategory userCategory = userCategoryRepository.findUserCategoryByUserIdAndCategoryId(userId, categoryId);
-        if (userCategory != null) {
+        long categoryId = userCategory.getCategoryId();
+        Category category = categoryRepository.findCategoryById(categoryId);
+        if (category == null) {
+            throw new RuntimeException("Invalid category id: " + userCategory.getCategoryId());
+        }
+
+        if (userCategoryRepository.findUserCategoryByUserIdAndCategoryId(userId, categoryId) != null) {
             throw new RuntimeException("User already subscribed the category, userId: " + userId + ", categoryId" + categoryId);
         }
 
-        userCategory = new UserCategory(userId, categoryId);
         userCategory.setCreateTime(System.currentTimeMillis());
         userCategory.setUpdateTime(System.currentTimeMillis());
         userCategoryRepository.save(userCategory);
@@ -77,17 +78,42 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new RuntimeException("Invalid user id: " + userId);
         }
+
         Category category = categoryRepository.findCategoryById(categoryId);
         if (category == null) {
             throw new RuntimeException("Invalid category id: " + categoryId);
         }
 
-        UserCategory userCategory = userCategoryRepository.findUserCategoryByUserIdAndCategoryId(userId, categoryId);
-        if (userCategory == null) {
+        UserCategory existingUserCategory = userCategoryRepository.findUserCategoryByUserIdAndCategoryId(userId, categoryId);
+        if (existingUserCategory == null) {
             throw new RuntimeException("User did not subscribe the category, userId: " + userId + ", categoryId" + categoryId);
         }
 
-        userCategoryRepository.delete(userCategory);
+        userCategoryRepository.delete(existingUserCategory);
+    }
+
+    @Override
+    public void updateMinDiscountPercent(UserCategory userCategory) throws RuntimeException {
+        long userId = userCategory.getUserId();
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("Invalid user id: " + userId);
+        }
+
+        long categoryId = userCategory.getCategoryId();
+        Category category = categoryRepository.findCategoryById(categoryId);
+        if (category == null) {
+            throw new RuntimeException("Invalid category id: " + categoryId);
+        }
+
+        UserCategory existingUserCategory = userCategoryRepository.findUserCategoryByUserIdAndCategoryId(userId, categoryId);
+        if (existingUserCategory == null) {
+            throw new RuntimeException("User did not subscribe the category, userId: " + userId + ", categoryId" + categoryId);
+        }
+
+        existingUserCategory.setMinDiscountPercent(userCategory.getMinDiscountPercent());
+        existingUserCategory.setUpdateTime(System.currentTimeMillis());
+        userCategoryRepository.save(existingUserCategory);
     }
 
     private User findUserById(Long userId) {

@@ -3,6 +3,7 @@ package com.bihju.rest;
 import com.bihju.domain.Category;
 import com.bihju.domain.Product;
 import com.bihju.domain.User;
+import com.bihju.domain.UserCategory;
 import com.bihju.service.CategoryService;
 import com.bihju.service.ProductService;
 import com.bihju.service.UserService;
@@ -42,10 +43,10 @@ public class UserServiceApi {
         return categoryService.getAllCategories();
     }
 
-    @RequestMapping(value="{userId}/categories/{categoryId}", method= RequestMethod.POST)
-    public String subscribe(@PathVariable Long userId, @PathVariable Long categoryId) {
+    @RequestMapping(value="categories", method= RequestMethod.POST)
+    public String subscribe(@RequestBody UserCategory userCategory) {
         try {
-            userService.subscribeCategory(userId, categoryId);
+            userService.subscribeCategory(userCategory);
         } catch (RuntimeException e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -59,6 +60,19 @@ public class UserServiceApi {
     public String unsubscribe(@PathVariable Long userId, @PathVariable Long categoryId) {
         try {
             userService.unSubscribeCategory(userId, categoryId);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return e.getMessage();
+        }
+
+        return "Success";
+    }
+
+    @RequestMapping(value="categories", method= RequestMethod.PUT)
+    public String updateMinDiscountPervent(@RequestBody UserCategory userCategory) {
+        try {
+            userService.updateMinDiscountPercent(userCategory);
         } catch (RuntimeException e) {
             e.printStackTrace();
             log.error(e.getMessage());

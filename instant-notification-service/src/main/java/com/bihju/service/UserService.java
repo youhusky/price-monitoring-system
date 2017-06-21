@@ -3,5 +3,5 @@ package com.bihju.service;
 import java.util.List;
 
 public interface UserService {
-    List<String> findUsersByCategoryId(Long categoryId);
+    List<String> findUsersByCategoryId(Long categoryId, Double discountPercent);
 }

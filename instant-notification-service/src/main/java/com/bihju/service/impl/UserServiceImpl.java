@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> findUsersByCategoryId(Long categoryId) {
-        return userRepository.findEmailsByCategoryIdAndNotificationType(categoryId, User.NotificationType.INSTANT);
+    public List<String> findUsersByCategoryId(Long categoryId, Double discountPercent) {
+        return userRepository.findEmailsByCategoryIdAndNotificationType(categoryId, User.NotificationType.INSTANT, discountPercent);
     }
 }

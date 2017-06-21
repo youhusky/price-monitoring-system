@@ -21,12 +21,15 @@ public class UserCategory {
 
     private long userId;
     private long categoryId;
+    private double minDiscountPercent;
     private long createTime;
     private long updateTime;
 
     @JsonCreator
-    public UserCategory(@JsonProperty("userId") Long userId, @JsonProperty("categoryId") Long categoryId) {
+    public UserCategory(@JsonProperty("userId") Long userId, @JsonProperty("categoryId") Long categoryId,
+                        @JsonProperty("minDiscountPercent") Double minDiscountPercent) {
         this.userId = userId;
         this.categoryId = categoryId;
+        this.minDiscountPercent = minDiscountPercent;
     }
 }
