@@ -56,6 +56,7 @@ Pre:
 > db.productLog.find().sort({"create_time": -1})
 > db.productLog.count()
 > db.productLog.remove({})      // remove all
+> db.productLog.find({"message": /title = /})  // find all messages with "title ="
 
 3. Check Redis key value:
 > redis-cli ping
