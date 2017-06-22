@@ -42,24 +42,24 @@ public class ProductProcessor {
     public void checkProductHigh(Product product) throws Exception {
         log.info("Product received on channel 1, productId = " + product.getProductId());
 
-        processProduct(product);
+        processProduct(product, output1);
     }
 
     @ServiceActivator(inputChannel = Processors.INPUT2)
     public void checkProductMedium(Product product) throws Exception {
         log.info("Product received on channel 2, productId = " + product.getProductId());
 
-        processProduct(product);
+        processProduct(product, output2);
     }
 
     @ServiceActivator(inputChannel = Processors.INPUT3)
     public void checkProductLow(Product product) throws Exception {
         log.info("Product received on channel 3, productId = " + product.getProductId());
 
-        processProduct(product);
+        processProduct(product, output3);
     }
 
-    private void processProduct(Product product) {
+    private void processProduct(Product product, MessageChannel output) {
         if (!isProductExist(product)) {
             cacheProductPrice(product);
             productService.createProduct(product);
@@ -70,7 +70,7 @@ public class ProductProcessor {
                 product.setOldPrice(cachedPrice);
                 product.setDiscountPercent(productService.getDiscountPercent(product.getOldPrice(), product.getPrice()));
                 if (cachedPrice > product.getPrice() && product.getPrice() != 0.0) {
-                    output1.send(MessageBuilder.withPayload(product).build());
+                    output.send(MessageBuilder.withPayload(product).build());
                 }
 
                 updateCache(product);
