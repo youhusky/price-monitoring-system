@@ -21,7 +21,13 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "left join user_category uc " +
             "on uc.category_id = c.id " +
             "group by (uc.category_id) " +
-            "having count(user_id) >= 1", nativeQuery = true)
+            "having count(user_id) >= " +
+            "( " +
+                    "select high_priority_user_count " +
+                    "from  user_count_threshold " +
+                    "order by update_time desc " +
+                    "limit 1 " +
+            ")", nativeQuery = true)
     List<Object[]> getHighPriorityCategories();
 
     @Query(value=
@@ -34,8 +40,13 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
                 "group by category_id " +
             ") as ucc " +
             "on ucc.category_id = c.id " +
-            "where user_count < 1 or user_count is null "
-            , nativeQuery=true)
+            "where user_count is null or user_count < " +
+            "( " +
+                    "select high_priority_user_count " +
+                    "from  user_count_threshold " +
+                    "order by update_time desc " +
+                    "limit 1 " +
+            ")", nativeQuery = true)
     List<Object[]> getSortedCategories();
 }
 

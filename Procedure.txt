@@ -1,6 +1,6 @@
 1. Start user-service.
 
-2. Create user-service.
+2. Create a user.
     Show MySQL (user)
 
 3. Subscribe category.
@@ -12,6 +12,16 @@
 5. Start category-crawler.
     Show MySQL (category)
 
+    Show MySQL (category_priority)
+    Clean up priority.
+    Run calculate category priority.
+    Show MySQL (category_priority)
+
+    Show MySQL (user_count_threshold)
+    Run Update User Count threshold.
+    Show MySQL (user_count_threshold)
+    Restore Update User Count threshold.
+
 7. Stop category-crawler.
 
 8. Start product-crawler.
@@ -19,11 +29,11 @@
 
     Show mongodb (db.productLog.find().pretty())
     Show mongodb (db.productLog.count())
+
 9. Start product-log-service.
     Show q_product_log
     Show q_product_p(n)
     Show mongodb (db.productLog.find().pretty())
-
 
 10. Start Price-monitoring-service.
     Show q_product_log
