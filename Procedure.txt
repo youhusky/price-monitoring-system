@@ -1,7 +1,8 @@
-1. Start user-service.
+1. Start user-service, category_crawler, product_crawler.
 
 2. Create a user.
     Show MySQL (user)
+    Show MySQL (category)
 
 3. Subscribe category.
     Show MySQL (user_category)
@@ -9,36 +10,28 @@
 4. UnSubscribe category.
     Show MySQL (user_category)
 
-5. Start category-crawler.
-    Show MySQL (category)
-
-    Show MySQL (category_priority)
-    Clean up priority.
+5. Show MySQL (category_priority)
+    Run Update User Count threshold.
     Run calculate category priority.
     Show MySQL (category_priority)
 
-    Show MySQL (user_count_threshold)
-    Run Update User Count threshold.
-    Show MySQL (user_count_threshold)
-    Restore Update User Count threshold.
+6. Start crawling (category)
 
 7. Stop category-crawler.
 
-8. Start product-crawler.
+8. Start crawling (product)
     Show RabbitMQ: queues (q_product_p(n), q_product_log)
 
     Show mongodb (db.productLog.find().pretty())
     Show mongodb (db.productLog.count())
 
 9. Start product-log-service.
-    Show q_product_log
-    Show q_product_p(n)
-    Show mongodb (db.productLog.find().pretty())
-
 10. Start Price-monitoring-service.
-    Show q_product_log
-    Show q_product_p(n)
-    Show q_discount_product_p(n)
+
+    Show RabbitMQ: queues: (q_product_log, q_product_p(n))
+    Show mongodb (db.productLog.count())
+
+    Show RabbitMQ: q_discount_product_p(n)
 
 11. Start instant-notification-service.
     Show q_discount_product_p(n)
