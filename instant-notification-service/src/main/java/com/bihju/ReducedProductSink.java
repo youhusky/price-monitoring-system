@@ -79,7 +79,7 @@ public class ReducedProductSink {
                 .replace("$DISCOUNT_PERCENT", String.valueOf(product.getDiscountPercent()))
                 .replace("$NEW_PRICE", String.valueOf(product.getPrice()))
                 .replace("$OLD_PRICE", String.valueOf(product.getOldPrice()));
-        log.info("body = " + body);
+//        log.info("body = " + body);
         mailUtil.send(emails, MAIL_USER, MAIL_USER
                 , MAIL_SUBJECT, body);
     }
