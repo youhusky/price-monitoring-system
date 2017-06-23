@@ -49,7 +49,7 @@ public class ProductCrawlerTask {
         initHeaders();
     }
 
-    @Scheduled(cron = "0 0 1-22/3 * * *")   // every 3 hours, starting from 1:00 AM
+    @Scheduled(cron = "0 0 8-23/3 * * *")   // every 3 hours, starting from 8:00 AM
     public void startCrawlingHighPriority() {
         log.info("Start crawling high priority categories, threadId: " + Thread.currentThread().getId());
 
@@ -75,7 +75,7 @@ public class ProductCrawlerTask {
         log.info("End crawling high priority categories, threadId: " + Thread.currentThread().getId());
     }
 
-    @Scheduled(cron = "0 0 2-14/12 * * *")   // every 12 hours, starting from 2:00 AM
+    @Scheduled(cron = "0 0 9-21/12 * * *")   // every 12 hours, starting from 9:00 AM
     public void startCrawlingMediumPriority() {
         log.info("Start crawling medium priority categories, threadId: " + Thread.currentThread().getId());
 
@@ -101,7 +101,7 @@ public class ProductCrawlerTask {
         log.info("End crawling medium priority categories, threadId: " + Thread.currentThread().getId());
     }
 
-    @Scheduled(cron = "0 0 3 * * *")   // every day, starting from 3:00 AM
+    @Scheduled(cron = "0 0 10 * * *")   // every day, starting from 10:00 AM
     public void startCrawlingLowPriority() {
         log.info("Start crawling low priority categories, threadId: " + Thread.currentThread().getId());
 

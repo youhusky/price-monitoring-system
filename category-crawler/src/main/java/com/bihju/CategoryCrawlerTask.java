@@ -70,7 +70,7 @@ public class CategoryCrawlerTask {
         userCountThresholdService.setUserCountThreshold(userCountThreshold);
     }
 
-    @Scheduled(cron = "0 0 0 * * SUN")   // every Sunday
+    @Scheduled(cron = "0 0 7 * * SUN")   // every Sunday
     @Async
     public void startCrawling() {
         log.info("Start crawling, threadId: " + Thread.currentThread().getId());
@@ -116,7 +116,7 @@ public class CategoryCrawlerTask {
         log.info("Finish category priority setting");
     }
 
-    @Scheduled(cron = "0 0 0 * * MON-SAT")   // every Monday to Saturday
+    @Scheduled(cron = "0 0 7 * * MON-SAT")   // every Monday to Saturday
     @Async
     public void updateCategoryPriorities() {
         List<Object[]> results = categoryService.getHighPriorityCategories();
