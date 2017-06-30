@@ -46,7 +46,7 @@ docker exec -it 9cd bash
 # mongo                             // open mongo shell
 > use test                          // Spring boot use test db as default
 > show collections                  // show all collections inside test db
-> db.restaurant.find().pretty()     // show all data inside restaurant table
+> db.productLog.find().pretty()     // show all data inside productLog table
 > exit                              // quit mongo shell
 > exit                              // exit container shell
 ```

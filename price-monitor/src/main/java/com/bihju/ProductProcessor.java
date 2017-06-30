@@ -42,6 +42,7 @@ public class ProductProcessor {
     public void checkProductHigh(Product product) throws Exception {
         log.info("Product received on channel 1, productId = " + product.getProductId());
 
+//        processProductWithoutCache(product, output1);
         processProduct(product, output1);
     }
 
@@ -49,6 +50,7 @@ public class ProductProcessor {
     public void checkProductMedium(Product product) throws Exception {
         log.info("Product received on channel 2, productId = " + product.getProductId());
 
+//        processProductWithoutCache(product, output2);
         processProduct(product, output2);
     }
 
@@ -56,7 +58,28 @@ public class ProductProcessor {
     public void checkProductLow(Product product) throws Exception {
         log.info("Product received on channel 3, productId = " + product.getProductId());
 
+//        processProductWithoutCache(product, output3);
         processProduct(product, output3);
+    }
+
+    private void processProductWithoutCache(Product product, MessageChannel output) {
+        Product savedProduct = productService.getProduct(product.getProductId());
+
+        if (savedProduct == null) {
+            productService.createProduct(product);
+        } else {
+            double savedPrice = savedProduct.getPrice();
+            if (savedPrice != product.getPrice()) {
+                savedProduct.setOldPrice(savedPrice);
+                savedProduct.setPrice(product.getPrice());
+                savedProduct.setDiscountPercent(productService.getDiscountPercent(savedProduct.getOldPrice(), savedProduct.getPrice()));
+                if (savedPrice > savedProduct.getPrice() && savedProduct.getPrice() != 0.0) {
+                    output.send(MessageBuilder.withPayload(savedProduct).build());
+                }
+
+                productService.updateProduct(savedProduct);
+            }
+        }
     }
 
     private void processProduct(Product product, MessageChannel output) {
